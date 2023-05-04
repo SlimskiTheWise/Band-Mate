@@ -7,7 +7,7 @@ export class SignupDto {
   @ApiProperty({
     example: 'test@test.com',
     description: 'user email',
-    type: 'string'
+    type: 'string',
   })
   email: string;
 
