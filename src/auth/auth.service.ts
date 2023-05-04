@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { UtilsService } from 'src/utils/utils.service';
 import { Payload } from './interfaces/payload.interface';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +11,7 @@ export class AuthService {
     private usersService: UsersService,
     private utilsService: UtilsService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
@@ -26,8 +28,27 @@ export class AuthService {
       id: user.id,
       email: user.email,
     };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const access_token = this.createAccessToken(payload);
+    const refresh_token = this.createRefreshToken(payload);
+    await this.usersService.saveRefreshToken(user.id, refresh_token);
+    return { access_token, refresh_token, user };
+  }
+
+  async signout(userId: number) {
+    await this.usersService.revokeRefreshToken(userId);
+  }
+
+  createAccessToken(payload: Payload): string {
+    return this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('jwt.jtwSecret'),
+      expiresIn: this.configService.get<string>('jwt.atkExpiresIn'),
+    });
+  }
+
+  createRefreshToken(payload: Payload): string {
+    return this.jwtService.sign(payload, {
+      secret: this.configService.get<string>('jwt.refreshTokenSecret'),
+      expiresIn: this.configService.get<string>('jwt.rtkExpiresIn'),
+    });
   }
 }

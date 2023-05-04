@@ -11,6 +11,7 @@ export default () => ({
   },
   jwt: {
     jwtSecret: process.env.JWT_SECRET,
+    refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
     atkExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
     rtkExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
   },

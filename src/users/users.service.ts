@@ -20,4 +20,12 @@ export class UsersService {
   async findOne(email: string): Promise<Users> {
     return this.usersRepository.findOne(email);
   }
+
+  async saveRefreshToken(userId: number, refresh_token: string) {
+    return this.usersRepository.saveRefreshToken(userId, refresh_token);
+  }
+
+  async revokeRefreshToken(userId: number) {
+    return this.usersRepository.revokeRefreshToken(userId);
+  }
 }

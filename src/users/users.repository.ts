@@ -17,4 +17,12 @@ export class UsersRepository {
   async findOne(email: string): Promise<Users> {
     return this.usersRepository.findOneBy({ email });
   }
+
+  async saveRefreshToken(userId: number, refresh_token: string) {
+    await this.usersRepository.update(userId, { refreshToken: refresh_token });
+  }
+
+  async revokeRefreshToken(userId: number) {
+    await this.usersRepository.update(userId, { refreshToken: '' });
+  }
 }

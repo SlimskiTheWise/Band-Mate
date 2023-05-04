@@ -11,4 +11,7 @@ export class Users extends AbstractEntity {
 
   @Column({ name: 'name', type: 'varchar', nullable: false })
   name: string;
+
+  @Column({ name: 'refresh_token', type: 'varchar', nullable: true })
+  refreshToken?: string;
 }

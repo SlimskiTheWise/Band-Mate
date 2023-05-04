@@ -22,18 +22,20 @@ export class AuthController {
   constructor(private authService: AuthService) {}
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
-  @Post('signIn')
+  @Post('signin')
   async signIn(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
     @Body() body: SignInDto,
   ) {
-    const access_token = await this.authService.signIn(req.user);
-    res.cookie('access_token', access_token, {
+    const { access_token, refresh_token, user } = await this.authService.signIn(
+      req.user,
+    );
+    res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
-      //   secure: true,
+      secure: true,
     });
-    return req.user;
+    return { userId: user.id, access_token };
   }
 
   @UseGuards(JwtAuthGuard)
