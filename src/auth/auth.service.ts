@@ -38,6 +38,15 @@ export class AuthService {
     await this.usersService.revokeRefreshToken(userId);
   }
 
+  async refreshAccessToken(refresh_token: string) {
+    const decodedToken = this.jwtService.decode(refresh_token);
+    return this.createAccessToken({
+      id: decodedToken['id'],
+      email: decodedToken['email'],
+      name: decodedToken['name'],
+    });
+  }
+
   createAccessToken(payload: Payload): string {
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>('jwt.jtwSecret'),

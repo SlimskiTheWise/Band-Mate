@@ -38,6 +38,15 @@ export class AuthController {
     return { userId: user.id, access_token };
   }
 
+  @Get('refresh-token')
+  async refreshAccessToken(@Req() req: Request) {
+    return {
+      access_token: await this.authService.refreshAccessToken(
+        req.cookies.refresh_token,
+      ),
+    };
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req: Request) {
