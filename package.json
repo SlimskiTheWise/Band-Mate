@@ -67,6 +67,18 @@
     "tsconfig-paths": "4.1.1",
     "typescript": "^4.7.4"
   },
+  "eslintConfig": {
+    "rules": {
+      "node/no-unpublished-import": [
+        "error",
+        {
+          "allowModules": [
+            "@nestjs/testing"
+          ]
+        }
+      ]
+    }
+  },
   "jest": {
     "moduleFileExtensions": [
       "js",
