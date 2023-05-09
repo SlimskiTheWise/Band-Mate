@@ -6,10 +6,10 @@ import { JwtService } from '@nestjs/jwt';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Users } from 'src/users/users.entity';
 import { UtilsService } from 'src/utils/utils.service';
-import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { UsersRepository } from 'src/users/users.repository';
 import { seedSingleUser } from 'src/test/mock-data/user-mock-data';
+import { jwtData } from 'src/test/mock-data/jwt-mock-data';
 
 describe('AuthService', () => {
   const USER_REPO_TOKEN = getRepositoryToken(Users);
@@ -17,8 +17,6 @@ describe('AuthService', () => {
   let authService: AuthService;
   let utilsService: UtilsService;
   let usersService: UsersService;
-  let jwtService: JwtService;
-  let usersRepository: Repository<Users>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -68,8 +66,6 @@ describe('AuthService', () => {
 
     authService = module.get<AuthService>(AuthService);
     utilsService = module.get<UtilsService>(UtilsService);
-    jwtService = module.get<JwtService>(JwtService);
-    usersRepository = module.get<Repository<Users>>(USER_REPO_TOKEN);
     usersService = module.get<UsersService>(UsersService);
   });
 
@@ -116,6 +112,24 @@ describe('AuthService', () => {
   describe('signin', () => {
     it('should succeed signing in', async () => {
       const user = seedSingleUser();
+
+      jest
+        .spyOn(authService, 'createAccessToken')
+        .mockReturnValue(jwtData().accessToken);
+
+      jest
+        .spyOn(authService, 'createRefreshToken')
+        .mockReturnValue(jwtData().refreshToken);
+
+      jest.spyOn(usersService, 'saveRefreshToken').mockResolvedValue();
+
+      const result = await authService.signIn(user);
+
+      expect(result).toEqual({
+        access_token: jwtData().accessToken,
+        refresh_token: jwtData().refreshToken,
+        user,
+      });
     });
   });
 });
