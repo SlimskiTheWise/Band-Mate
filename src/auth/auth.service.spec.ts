@@ -9,6 +9,7 @@ import { UtilsService } from 'src/utils/utils.service';
 import { Repository } from 'typeorm';
 import { UsersService } from 'src/users/users.service';
 import { UsersRepository } from 'src/users/users.repository';
+import { seedSingleUser } from 'src/test/mock-data/user-mock-data';
 
 describe('AuthService', () => {
   const USER_REPO_TOKEN = getRepositoryToken(Users);
@@ -82,39 +83,39 @@ describe('AuthService', () => {
 
   describe('validate user', () => {
     it('should succeed validating user', async () => {
-      const email = 'test@test.com';
-      const password = '123456';
-
-      const user = new Users();
+      const user = seedSingleUser();
 
       jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
       jest.spyOn(utilsService, 'compare').mockResolvedValue(true);
-      const result = await authService.validateUser(email, password);
+      const result = await authService.validateUser(user.email, user.password);
 
       expect(result).toBe(user);
     });
 
     it('should fail validating user when user does not exist', async () => {
-      const email = 'test@test.com';
-      const password = '123456';
-
+      const user = seedSingleUser();
       jest.spyOn(usersService, 'findOne').mockResolvedValue(undefined);
 
-      expect(authService.validateUser(email, password)).rejects.toThrowError();
+      expect(
+        authService.validateUser(user.email, user.password),
+      ).rejects.toThrowError();
     });
 
     it('should fail validating when password is not matching', async () => {
-      const email = 'test@test.com';
-      const password = '123456';
-
-      const user = new Users();
-      user.email = email;
-      user.password = '121212';
+      const user = seedSingleUser();
 
       jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
       jest.spyOn(utilsService, 'compare').mockResolvedValue(false);
 
-      expect(authService.validateUser(email, password)).rejects.toThrowError();
+      expect(
+        authService.validateUser(user.email, user.password),
+      ).rejects.toThrowError();
+    });
+  });
+
+  describe('signin', () => {
+    it('should succeed signing in', async () => {
+      const user = seedSingleUser();
     });
   });
 });
