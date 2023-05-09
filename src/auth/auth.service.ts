@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { UtilsService } from 'src/utils/utils.service';
@@ -16,9 +16,12 @@ export class AuthService {
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findOne(email);
-    if (!this.utilsService.compare(password, user.password)) {
-      throw new BadRequestException();
-    }
+    if (!user) throw new NotFoundException('User not found');
+    const isPasswordMatching = await this.utilsService.compare(
+      password,
+      user.password,
+    );
+    if (!isPasswordMatching) throw new NotFoundException('User not found');
     return user;
   }
 
