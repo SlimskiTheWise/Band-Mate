@@ -4,6 +4,8 @@ import { UsersService } from 'src/users/users.service';
 import { UtilsService } from 'src/utils/utils.service';
 import { Payload } from './interfaces/payload.interface';
 import { ConfigService } from '@nestjs/config';
+import { GoogleUser } from './interfaces/google.user.interface';
+import { Users } from 'src/users/users.entity';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,7 @@ export class AuthService {
     return user;
   }
 
-  async signIn(user: any) {
+  async signIn(user: Users) {
     const payload: Payload = {
       name: user.name,
       id: user.id,
@@ -62,5 +64,15 @@ export class AuthService {
       secret: this.configService.get<string>('jwt.refreshTokenSecret'),
       expiresIn: this.configService.get<string>('jwt.rtkExpiresIn'),
     });
+  }
+
+  async googleSignin(user: GoogleUser) {
+    const userExists = await this.usersService.findOne(user.email);
+    const newUser = !userExists ? await this.signupGoogleUser(user) : undefined;
+    await this.signIn(newUser || userExists);
+  }
+
+  async signupGoogleUser(user: GoogleUser): Promise<Users> {
+    return await this.usersService.signupGoogleUser(user);
   }
 }

@@ -15,4 +15,8 @@ export default () => ({
     atkExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
     rtkExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
   },
+  oauth: {
+    googleClientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
+    googleClientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
+  },
 });
