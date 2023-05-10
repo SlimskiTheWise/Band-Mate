@@ -31,9 +31,9 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
-  @Post('signin')
-  async signIn(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { access_token, refresh_token } = await this.authService.signIn(
+  @Post('login')
+  async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const { access_token, refresh_token } = await this.authService.login(
       req.user as Users,
     );
     this.authService.storeTokenInCookie(res, { access_token, refresh_token });
@@ -65,7 +65,7 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access_token, refresh_token } = await this.authService.googleSignin(
+    const { access_token, refresh_token } = await this.authService.googleLogin(
       req.user as GoogleUser,
     );
     this.authService.storeTokenInCookie(res, { access_token, refresh_token });

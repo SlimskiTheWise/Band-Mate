@@ -109,8 +109,8 @@ describe('AuthService', () => {
     });
   });
 
-  describe('signin', () => {
-    it('should succeed signing in', async () => {
+  describe('login', () => {
+    it('should succeed loggin in', async () => {
       const user = seedSingleUser();
 
       jest
@@ -123,7 +123,7 @@ describe('AuthService', () => {
 
       jest.spyOn(usersService, 'saveRefreshToken').mockResolvedValue();
 
-      const result = await authService.signIn(user);
+      const result = await authService.login(user);
 
       expect(result).toEqual({
         access_token: jwtData().accessToken,

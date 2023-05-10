@@ -28,7 +28,7 @@ export class AuthService {
     return user;
   }
 
-  async signIn(user: Users) {
+  async login(user: Users) {
     const payload: Payload = {
       name: user.name,
       id: user.id,
@@ -67,10 +67,10 @@ export class AuthService {
     });
   }
 
-  async googleSignin(user: GoogleUser) {
+  async googleLogin(user: GoogleUser) {
     const userExists = await this.usersService.findOne(user.email);
     const newUser = !userExists ? await this.signupGoogleUser(user) : undefined;
-    return this.signIn(newUser || userExists);
+    return this.login(newUser || userExists);
   }
 
   async signupGoogleUser(user: GoogleUser): Promise<Users> {
