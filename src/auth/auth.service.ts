@@ -6,6 +6,7 @@ import { Payload } from './interfaces/payload.interface';
 import { ConfigService } from '@nestjs/config';
 import { GoogleUser } from './interfaces/google.user.interface';
 import { Users } from 'src/users/users.entity';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -39,8 +40,8 @@ export class AuthService {
     return { access_token, refresh_token, user };
   }
 
-  async signout(userId: number) {
-    await this.usersService.revokeRefreshToken(userId);
+  async signout(user: Users) {
+    await this.usersService.revokeRefreshToken(user.id);
   }
 
   async refreshAccessToken(refresh_token: string) {
@@ -74,5 +75,16 @@ export class AuthService {
 
   async signupGoogleUser(user: GoogleUser): Promise<Users> {
     return await this.usersService.signupGoogleUser(user);
+  }
+
+  storeTokenInCookie(res: Response, { access_token, refresh_token }) {
+    res.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: true,
+    });
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true,
+      secure: true,
+    });
   }
 }
