@@ -8,7 +8,7 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiCookieAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -33,14 +33,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   async signIn(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const { access_token, refresh_token, user } = await this.authService.signIn(
+    const { access_token, refresh_token } = await this.authService.signIn(
       req.user as Users,
     );
-    res.cookie('refresh_token', refresh_token, {
-      httpOnly: true,
-      secure: true,
-    });
-    return { userId: user.id, access_token };
+    this.authService.storeTokenInCookie(res, { access_token, refresh_token });
+    res.send({ success: true });
+    return;
   }
 
   @Get('refresh-token')
@@ -54,24 +52,36 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
+  @ApiCookieAuth()
   getProfile(@Req() req: Request) {
     return req.user;
   }
 
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'google redirect' })
   @UseGuards(GoogleAuthGuard)
   @Get('google/redirect')
+  @HttpCode(HttpStatus.OK)
   async googleRedirect(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access_token, refresh_token, user } =
-      await this.authService.googleSignin(req.user as GoogleUser);
-    res.cookie('refresh_token', refresh_token, {
-      httpOnly: true,
-      secure: true,
-    });
-    return { userId: user.id, access_token };
+    const { access_token, refresh_token } = await this.authService.googleSignin(
+      req.user as GoogleUser,
+    );
+    this.authService.storeTokenInCookie(res, { access_token, refresh_token });
+    res.send({ success: true });
+    return;
+  }
+
+  @HttpCode(204)
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'logout' })
+  @ApiCookieAuth()
+  @Post('logout')
+  async logout(@Req() req: Request, @Res() res: Response) {
+    res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
+    this.authService.signout(req.user as Users);
+    res.send({ success: true });
   }
 }
