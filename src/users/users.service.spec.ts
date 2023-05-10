@@ -7,6 +7,8 @@ import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcrypt';
 import { SignupDto } from './dtos/signup.dto';
 import { Users } from './users.entity';
+import { Role } from 'src/common/enums/role.enum';
+import { seedSingleUser } from 'src/test/mock-data/user-mock-data';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -50,13 +52,10 @@ describe('UsersService', () => {
       email: 'test@test.com',
       password: 'password',
       name: 'test',
+      role: Role.USER,
     };
 
-    const newUser: Users = new Users();
-    newUser.id = 1;
-    newUser.password = 'encrypt';
-    newUser.email = 'test@test.com';
-    newUser.name = 'test';
+    const newUser: Users = seedSingleUser();
 
     jest.spyOn(bcrypt, 'hash').mockImplementation(() => user.password);
     jest.spyOn(usersRepository, 'signUp').mockResolvedValue(newUser);

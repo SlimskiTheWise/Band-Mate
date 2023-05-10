@@ -1,3 +1,4 @@
+import { Role } from 'src/common/enums/role.enum';
 import { AbstractEntity } from 'src/entities/abstract.entity';
 import { Column, Entity } from 'typeorm';
 
@@ -14,4 +15,13 @@ export class Users extends AbstractEntity {
 
   @Column({ name: 'refresh_token', type: 'varchar', nullable: true })
   refreshToken?: string;
+
+  @Column({
+    name: 'role',
+    type: 'varchar',
+    default: Role.USER,
+    enum: Role,
+    nullable: false,
+  })
+  role: Role;
 }

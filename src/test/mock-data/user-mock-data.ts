@@ -1,3 +1,4 @@
+import { Role } from 'src/common/enums/role.enum';
 import { Users } from 'src/users/users.entity';
 
 export function seedSingleUser(): Users {
@@ -9,5 +10,6 @@ export function seedSingleUser(): Users {
   user.createdAt = new Date();
   user.updatedAt = new Date();
   user.deletedAt = null;
+  user.role = Role.USER;
   return user;
 }

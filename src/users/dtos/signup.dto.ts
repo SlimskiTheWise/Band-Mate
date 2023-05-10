@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { Role } from 'src/common/enums/role.enum';
 
 export class SignupDto {
   @IsEmail({}, { message: 'invalid_email' })
@@ -18,4 +19,9 @@ export class SignupDto {
   @ApiProperty({ description: 'name', type: 'string' })
   @IsString()
   name: string;
+
+  @ApiProperty({ description: 'role', type: 'string' })
+  @IsString()
+  @IsOptional()
+  role?: Role;
 }
