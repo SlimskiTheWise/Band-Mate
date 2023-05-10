@@ -54,7 +54,7 @@ export class AuthService {
 
   createAccessToken(payload: Payload): string {
     return this.jwtService.sign(payload, {
-      secret: this.configService.get<string>('jwt.jtwSecret'),
+      secret: this.configService.get<string>('jwt.jwtSecret'),
       expiresIn: this.configService.get<string>('jwt.atkExpiresIn'),
     });
   }
@@ -69,7 +69,7 @@ export class AuthService {
   async googleSignin(user: GoogleUser) {
     const userExists = await this.usersService.findOne(user.email);
     const newUser = !userExists ? await this.signupGoogleUser(user) : undefined;
-    await this.signIn(newUser || userExists);
+    return this.signIn(newUser || userExists);
   }
 
   async signupGoogleUser(user: GoogleUser): Promise<Users> {
