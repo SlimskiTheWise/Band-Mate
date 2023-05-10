@@ -62,8 +62,16 @@ export class AuthController {
   @ApiOperation({ summary: 'google redirect' })
   @UseGuards(GoogleAuthGuard)
   @Get('google/redirect')
-  async googleRedirect(@Req() req: Request) {
-    await this.authService.googleSignin(req.user as GoogleUser);
-    return { msg: 'success' };
+  async googleRedirect(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { access_token, refresh_token, user } =
+      await this.authService.googleSignin(req.user as GoogleUser);
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true,
+      secure: true,
+    });
+    return { userId: user.id, access_token };
   }
 }

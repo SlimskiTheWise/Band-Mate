@@ -6,7 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
 import { UtilsModule } from 'src/utils/utils.module';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 
@@ -15,7 +15,9 @@ import { GoogleStrategy } from './strategies/google.strategy';
     UsersModule,
     PassportModule,
     UtilsModule,
+    ConfigModule,
     JwtModule.registerAsync({
+      imports: [ConfigModule],
       useFactory: (config: ConfigService) => {
         return {
           secret: config.get<string>('jwt.jwtSecret'),
