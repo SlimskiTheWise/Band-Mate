@@ -16,6 +16,7 @@ import { AuthService } from './auth.service';
 import { GoogleAuthGuard } from './guards/google-auth-guard';
 import { GoogleUser } from './interfaces/google.user.interface';
 import { Users } from 'src/users/users.entity';
+import { RefreshAuthGuard } from './guards/refresh-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -41,13 +42,19 @@ export class AuthController {
     return;
   }
 
+  @UseGuards(RefreshAuthGuard)
   @Get('refresh-token')
-  async refreshAccessToken(@Req() req: Request) {
-    return {
-      access_token: await this.authService.refreshAccessToken(
-        req.cookies.refresh_token,
-      ),
-    };
+  async refreshAccessToken(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refresh_token = req.cookies.refresh_token;
+    const access_token = await this.authService.refreshAccessToken(
+      refresh_token,
+    );
+    this.authService.storeTokenInCookie(res, { access_token, refresh_token });
+    res.send({ success: true });
+    return;
   }
 
   @UseGuards(JwtAuthGuard)
