@@ -33,6 +33,7 @@ export class AuthService {
       name: user.name,
       id: user.id,
       email: user.email,
+      role: user.role,
     };
     const access_token = this.createAccessToken(payload);
     const refresh_token = this.createRefreshToken(payload);
@@ -50,6 +51,7 @@ export class AuthService {
       id: decodedToken['id'],
       email: decodedToken['email'],
       name: decodedToken['name'],
+      role: decodedToken['role'],
     });
   }
 

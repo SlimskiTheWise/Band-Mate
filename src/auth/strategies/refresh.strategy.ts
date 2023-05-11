@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request as RequestType } from 'express';
+import { Payload } from '../interfaces/payload.interface';
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -21,7 +22,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  async validate(req: RequestType, payload: any) {
+  async validate(req: RequestType, payload: Payload) {
     const refreshToken = req.cookies.refresh_token;
     return { ...payload, refreshToken };
   }
