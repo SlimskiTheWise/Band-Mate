@@ -6,7 +6,7 @@ import { Followers } from './follwers.entity';
 @Injectable()
 export class FollowersRepository {
   constructor(
-    @InjectRepository(FollowersRepository)
+    @InjectRepository(Followers)
     private followersRepository: Repository<Followers>,
   ) {}
 }
