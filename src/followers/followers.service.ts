@@ -8,4 +8,8 @@ export class FollowersService {
   async createFollower(userId: number, followedUserId: number) {
     await this.followersRepository.createFollower(userId, followedUserId);
   }
+
+  async deleteFollower(id: number) {
+    await this.followersRepository.deleteFollower(id);
+  }
 }

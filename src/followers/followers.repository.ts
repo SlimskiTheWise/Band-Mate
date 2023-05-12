@@ -16,4 +16,8 @@ export class FollowersRepository {
       followedUserId,
     });
   }
+
+  async deleteFollower(id: number) {
+    await this.followersRepository.delete(id);
+  }
 }

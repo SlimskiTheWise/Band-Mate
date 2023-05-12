@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Param,
   ParseIntPipe,
   Post,
@@ -9,7 +10,6 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { FollowersService } from './followers.service';
-import { Request } from 'express';
 import { Users } from 'src/users/users.entity';
 
 @Controller('followers')
@@ -25,5 +25,11 @@ export class FollowersController {
     @Param('followedUserId', ParseIntPipe) followedUserId: number,
   ): Promise<void> {
     await this.followersService.createFollower(user.id, followedUserId);
+  }
+
+  @ApiOperation({ summary: 'loggedin user unfollowing another user' })
+  @Delete(':id')
+  async deleteFollower(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    await this.followersService.deleteFollower(id);
   }
 }
