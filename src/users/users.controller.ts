@@ -18,6 +18,6 @@ export class UsersController {
   @ApiOperation({ description: 'find one user' })
   @Get(':email')
   async findOne(@Param('email') email: string) {
-    return await this.usersService.findOne(email);
+    return await this.usersService.findOneByEmail(email);
   }
 }
