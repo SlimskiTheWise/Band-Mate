@@ -1,6 +1,7 @@
 import { Role } from 'src/common/enums/role.enum';
 import { TimestampEntity } from 'src/entities/timestamp.entity';
-import { Column, Entity } from 'typeorm';
+import { Followers } from 'src/followers/follwers.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('Users')
 export class Users extends TimestampEntity {
@@ -24,4 +25,12 @@ export class Users extends TimestampEntity {
     nullable: false,
   })
   role: Role;
+
+  @ManyToOne(() => Followers, (follower) => follower.following)
+  @JoinColumn({ name: 'followedUserId' })
+  followers: Followers[];
+
+  @ManyToOne(() => Followers, (follower) => follower.follower)
+  @JoinColumn({ name: 'followingUserId' })
+  following: Followers[];
 }
