@@ -3,17 +3,14 @@ import { AuthService } from './auth.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from 'src/config/configuration';
 import { JwtService } from '@nestjs/jwt';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Users } from 'src/users/users.entity';
 import { UtilsService } from 'src/utils/utils.service';
 import { UsersService } from 'src/users/users.service';
 import { UsersRepository } from 'src/users/users.repository';
 import { seedSingleUser } from 'src/test/mock-data/user-mock-data';
 import { jwtData } from 'src/test/mock-data/jwt-mock-data';
+import { REPOSITORY_TOKEN } from 'src/test/repository-token';
 
 describe('AuthService', () => {
-  const USER_REPO_TOKEN = getRepositoryToken(Users);
-
   let authService: AuthService;
   let utilsService: UtilsService;
   let usersService: UsersService;
@@ -30,7 +27,7 @@ describe('AuthService', () => {
         AuthService,
         UsersService,
         {
-          provide: USER_REPO_TOKEN,
+          provide: REPOSITORY_TOKEN.USERS,
           useValue: {
             findOne: jest.fn(),
             save: jest.fn(),
