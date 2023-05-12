@@ -9,4 +9,11 @@ export class FollowersRepository {
     @InjectRepository(Followers)
     private followersRepository: Repository<Followers>,
   ) {}
+
+  async createFollower(userId: number, followedUserId: number) {
+    await this.followersRepository.save({
+      followingUserId: userId,
+      followedUserId,
+    });
+  }
 }
