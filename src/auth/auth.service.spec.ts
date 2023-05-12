@@ -3,17 +3,14 @@ import { AuthService } from './auth.service';
 import { ConfigModule } from '@nestjs/config';
 import configuration from 'src/config/configuration';
 import { JwtService } from '@nestjs/jwt';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Users } from 'src/users/users.entity';
 import { UtilsService } from 'src/utils/utils.service';
 import { UsersService } from 'src/users/users.service';
 import { UsersRepository } from 'src/users/users.repository';
 import { seedSingleUser } from 'src/test/mock-data/user-mock-data';
 import { jwtData } from 'src/test/mock-data/jwt-mock-data';
+import { REPOSITORY_TOKEN } from 'src/test/repository-token';
 
 describe('AuthService', () => {
-  const USER_REPO_TOKEN = getRepositoryToken(Users);
-
   let authService: AuthService;
   let utilsService: UtilsService;
   let usersService: UsersService;
@@ -30,7 +27,7 @@ describe('AuthService', () => {
         AuthService,
         UsersService,
         {
-          provide: USER_REPO_TOKEN,
+          provide: REPOSITORY_TOKEN.USERS,
           useValue: {
             findOne: jest.fn(),
             save: jest.fn(),
@@ -54,7 +51,7 @@ describe('AuthService', () => {
         {
           provide: UsersRepository,
           useValue: {
-            findOne: jest.fn(),
+            findOneByEmail: jest.fn(),
             signUp: jest.fn(),
             register: jest.fn(),
             saveRefreshToken: jest.fn(),
@@ -81,7 +78,7 @@ describe('AuthService', () => {
     it('should succeed validating user', async () => {
       const user = seedSingleUser();
 
-      jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
+      jest.spyOn(usersService, 'findOneByEmail').mockResolvedValue(user);
       jest.spyOn(utilsService, 'compare').mockResolvedValue(true);
       const result = await authService.validateUser(user.email, user.password);
 
@@ -90,7 +87,7 @@ describe('AuthService', () => {
 
     it('should fail validating user when user does not exist', async () => {
       const user = seedSingleUser();
-      jest.spyOn(usersService, 'findOne').mockResolvedValue(undefined);
+      jest.spyOn(usersService, 'findOneByEmail').mockResolvedValue(undefined);
 
       expect(
         authService.validateUser(user.email, user.password),
@@ -100,7 +97,7 @@ describe('AuthService', () => {
     it('should fail validating when password is not matching', async () => {
       const user = seedSingleUser();
 
-      jest.spyOn(usersService, 'findOne').mockResolvedValue(user);
+      jest.spyOn(usersService, 'findOneByEmail').mockResolvedValue(user);
       jest.spyOn(utilsService, 'compare').mockResolvedValue(false);
 
       expect(

@@ -18,7 +18,7 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne(email);
+    const user = await this.usersService.findOneByEmail(email);
     if (!user) throw new NotFoundException('User not found');
     const isPasswordMatching = await this.utilsService.compare(
       password,
@@ -70,7 +70,7 @@ export class AuthService {
   }
 
   async googleLogin(user: GoogleUser) {
-    const userExists = await this.usersService.findOne(user.email);
+    const userExists = await this.usersService.findOneByEmail(user.email);
     const newUser = !userExists ? await this.signupGoogleUser(user) : undefined;
     return this.login(newUser || userExists);
   }

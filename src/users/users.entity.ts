@@ -1,9 +1,10 @@
 import { Role } from 'src/common/enums/role.enum';
-import { AbstractEntity } from 'src/entities/abstract.entity';
-import { Column, Entity } from 'typeorm';
+import { TimestampEntity } from 'src/entities/timestamp.entity';
+import { Followers } from 'src/followers/follwers.entity';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('Users')
-export class Users extends AbstractEntity {
+export class Users extends TimestampEntity {
   @Column({ name: 'email', type: 'varchar', nullable: false })
   email: string;
 
@@ -24,4 +25,12 @@ export class Users extends AbstractEntity {
     nullable: false,
   })
   role: Role;
+
+  @ManyToOne(() => Followers, (follower) => follower.following)
+  @JoinColumn({ name: 'followedUserId' })
+  followers: Followers[];
+
+  @ManyToOne(() => Followers, (follower) => follower.follower)
+  @JoinColumn({ name: 'followingUserId' })
+  following: Followers[];
 }

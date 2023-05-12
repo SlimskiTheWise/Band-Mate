@@ -18,8 +18,12 @@ export class UsersService {
     return this.usersRepository.signUp({ password: hashedPassword, ...rest });
   }
 
-  async findOne(email: string): Promise<Users> {
-    return this.usersRepository.findOne(email);
+  async findOneByEmail(email: string): Promise<Users> {
+    return this.usersRepository.findOneByEmail(email);
+  }
+
+  async findOneById(id: number): Promise<Users> {
+    return this.usersRepository.findOneById(id);
   }
 
   async saveRefreshToken(userId: number, refresh_token: string) {
