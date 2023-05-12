@@ -1,9 +1,9 @@
 import { Role } from 'src/common/enums/role.enum';
-import { AbstractEntity } from 'src/entities/abstract.entity';
+import { TimestampEntity } from 'src/entities/timestamp.entity';
 import { Column, Entity } from 'typeorm';
 
 @Entity('Users')
-export class Users extends AbstractEntity {
+export class Users extends TimestampEntity {
   @Column({ name: 'email', type: 'varchar', nullable: false })
   email: string;
 
