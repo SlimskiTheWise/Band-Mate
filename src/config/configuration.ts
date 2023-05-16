@@ -19,4 +19,10 @@ export default () => ({
     googleClientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
     googleClientSecret: process.env.OAUTH_GOOGLE_CLIENT_SECRET,
   },
+  aws: {
+    awsS3BucketName: process.env.AWS_S3_BUCKET_NAME,
+    awsS3AccessKey: process.env.AWS_S3_ACCESS_KEY,
+    awsS3AccessSecretKey: process.env.AWS_S3_ACCESS_SECRET_KEY,
+    awsRegion: process.env.AWS_REGION,
+  },
 });
