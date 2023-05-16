@@ -6,6 +6,7 @@ import configuration from './config/configuration';
 import { UtilsModule } from './utils/utils.module';
 import { AuthModule } from './auth/auth.module';
 import { FollowersModule } from './followers/followers.module';
+import { AwsModule } from './aws/aws.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { FollowersModule } from './followers/followers.module';
     UtilsModule,
     AuthModule,
     FollowersModule,
+    AwsModule,
   ],
   controllers: [],
   providers: [],
