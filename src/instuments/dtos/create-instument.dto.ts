@@ -24,12 +24,12 @@ export class CreateInstrumentDto {
   @IsString()
   location: string;
 
-  @ApiProperty({ description: 'condition of the item', type: Condition })
+  @ApiProperty({ description: 'condition of the item', enum: Condition })
   @IsNotEmpty()
   @IsString()
   condition: Condition;
 
-  @ApiProperty({ description: 'type of instrument', type: Type })
+  @ApiProperty({ description: 'type of instrument', enum: Type })
   @IsNotEmpty()
   @IsString()
   type: Type;
