@@ -6,7 +6,7 @@ import { Users } from 'src/users/users.entity';
 
 @Entity('Instruments')
 export class Instruments extends TimestampEntity {
-  @Column({ name: 'user_id', type: 'number', nullable: false })
+  @Column({ name: 'userId', type: 'int', nullable: false })
   userId: number;
 
   @Column({ name: 'title', type: 'varchar', nullable: false })
@@ -15,7 +15,7 @@ export class Instruments extends TimestampEntity {
   @Column({ name: 'description', type: 'text', nullable: false })
   description: string;
 
-  @Column({ name: 'price', type: 'number', nullable: false })
+  @Column({ name: 'price', type: 'int', nullable: false })
   price: number;
 
   @Column({ name: 'location', type: 'varchar', nullable: false })
