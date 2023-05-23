@@ -2,9 +2,9 @@ import { Condition } from 'src/instuments/enums/condition.enum';
 import { Type } from 'src/instuments/enums/type.enum';
 import { Instruments } from 'src/instuments/instruments.entity';
 
-export function seedSingleInstrument(): Instruments {
+export function seedSingleInstrument(index = 1): Instruments {
   const instrument = new Instruments();
-  instrument.id = 1;
+  instrument.id = index;
   instrument.condition = Condition.GOOD;
   instrument.location = 'seoul';
   instrument.price = 10000;
@@ -15,4 +15,8 @@ export function seedSingleInstrument(): Instruments {
   instrument.updatedAt = new Date();
   instrument.deletedAt = null;
   return instrument;
+}
+
+export function seedManyInstruments(): Instruments[] {
+  return Array.from({ length: 50 }, (_, i) => seedSingleInstrument(i));
 }
