@@ -25,4 +25,8 @@ export default () => ({
     awsS3AccessSecretKey: process.env.AWS_S3_ACCESS_SECRET_KEY,
     awsRegion: process.env.AWS_REGION,
   },
+  mail: {
+    user: process.env.MAIL_USER,
+    password: process.env.MAIL_PASSWORD,
+  },
 });
