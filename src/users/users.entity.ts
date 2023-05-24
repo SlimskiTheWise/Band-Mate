@@ -8,6 +8,10 @@ export class Users extends TimestampEntity {
   @Column({ name: 'email', type: 'varchar', nullable: false })
   email: string;
 
+  // when signing up using Google OAuth, username can be nullable
+  @Column({ name: 'username', type: 'varchar', nullable: true })
+  username?: string;
+
   @Column({ name: 'password', type: 'varchar', nullable: false })
   password: string;
 

@@ -4,6 +4,7 @@ import { Users } from 'src/users/users.entity';
 export function seedSingleUser(): Users {
   const user = new Users();
   user.id = 1;
+  user.username = 'username';
   user.name = 'random-name';
   user.email = 'test@test.com';
   user.password = '123456';
