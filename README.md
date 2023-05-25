@@ -1,7 +1,10 @@
 
 
 ## About the Project 
-This project is mainly for myself to learn new skills and apply what I've learned such as Nestjs, unit testing, typescript, and CI/CD. I'm doing some brainstorming to see what this could be down the line at the moment.
+BandMate provides a community where users can buy and sell used musical instruments and connect with other musicians 
+
+## Stacks
+Nodejs, Nestjs, Typescript, Postgres, Docker, GithubActions, TypeORM
 
 ## Installation
 
