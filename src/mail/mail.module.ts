@@ -3,9 +3,13 @@ import { MailService } from './mail.service';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { VerificationCodesRepository } from './verification-codes.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { VerificationCodes } from './verification-codes.entity';
 
 @Module({
   imports: [
+    TypeOrmModule.forFeature([VerificationCodes]),
     MailerModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
         transport: {
@@ -30,8 +34,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
       inject: [ConfigService],
     }),
   ],
-  providers: [MailService],
-  exports: [MailService],
-  controllers: [MailController],
+  providers: [MailService, VerificationCodesRepository],
+  exports: [MailService, VerificationCodesRepository],
 })
 export class MailModule {}
