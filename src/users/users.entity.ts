@@ -1,7 +1,8 @@
 import { Role } from 'src/common/enums/role.enum';
 import { TimestampEntity } from 'src/entities/timestamp.entity';
 import { Followers } from 'src/followers/follwers.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Instruments } from 'src/instuments/instruments.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('Users')
 export class Users extends TimestampEntity {
@@ -26,6 +27,9 @@ export class Users extends TimestampEntity {
   })
   role: Role;
 
+  @Column({ name: 'profile_picture_url', type: 'varchar', nullable: true })
+  profilePictureUrl: string;
+
   @ManyToOne(() => Followers, (follower) => follower.following)
   @JoinColumn({ name: 'followedUserId' })
   followers: Followers[];
@@ -34,6 +38,6 @@ export class Users extends TimestampEntity {
   @JoinColumn({ name: 'followingUserId' })
   following: Followers[];
 
-  @Column({ name: 'profile_picture_url', type: 'varchar', nullable: true })
-  profilePictureUrl: string;
+  @OneToMany(() => Instruments, (instrument) => instrument.user)
+  instruments: Instruments[];
 }

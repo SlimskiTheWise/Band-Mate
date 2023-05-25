@@ -7,6 +7,7 @@ import { UtilsModule } from './utils/utils.module';
 import { AuthModule } from './auth/auth.module';
 import { FollowersModule } from './followers/followers.module';
 import { AwsModule } from './aws/aws.module';
+import { InstrumentModule } from './instuments/instruments.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AwsModule } from './aws/aws.module';
     AuthModule,
     FollowersModule,
     AwsModule,
+    InstrumentModule,
   ],
   controllers: [],
   providers: [],
