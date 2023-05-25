@@ -8,11 +8,13 @@ import { UsersService } from 'src/users/users.service';
 import { UsersRepository } from 'src/users/users.repository';
 import { UtilsService } from 'src/utils/utils.service';
 import { seedSingleUser } from 'src/test/mock-data/user-mock-data';
+import { VerificationCodesRepository } from 'src/mail/verification-codes.repository';
 
 describe('FollowersService', () => {
   let follwersService: FollowersService;
   let followersRepository: FollowersRepository;
   let usersService: UsersService;
+  let verificationCodesRepository: VerificationCodesRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,6 +34,10 @@ describe('FollowersService', () => {
             save: jest.fn(),
             update: jest.fn(),
           },
+        },
+        {
+          provide: VerificationCodesRepository,
+          useValue: { findOneByEmail: jest.fn() },
         },
         {
           provide: FollowersRepository,
@@ -66,12 +72,16 @@ describe('FollowersService', () => {
     follwersService = module.get<FollowersService>(FollowersService);
     usersService = module.get<UsersService>(UsersService);
     followersRepository = module.get<FollowersRepository>(FollowersRepository);
+    verificationCodesRepository = module.get<VerificationCodesRepository>(
+      VerificationCodesRepository,
+    );
   });
 
   it('should be defined', () => {
     expect(follwersService).toBeDefined();
     expect(followersRepository).toBeDefined();
     expect(usersService).toBeDefined();
+    expect(verificationCodesRepository).toBeDefined();
   });
 
   describe('creating follower', () => {
