@@ -16,6 +16,10 @@ export class SignupDto {
   @IsString()
   password: string;
 
+  @ApiProperty({ description: 'username', type: 'string' })
+  @IsString()
+  username?: string;
+
   @ApiProperty({ description: 'name', type: 'string' })
   @IsString()
   name: string;

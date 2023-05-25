@@ -51,6 +51,7 @@ describe('UsersService', () => {
     const user: SignupDto = {
       email: 'test@test.com',
       password: 'password',
+      username: 'username',
       name: 'test',
       role: Role.USER,
     };
