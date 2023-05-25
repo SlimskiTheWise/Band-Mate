@@ -29,4 +29,8 @@ export class UsersRepository {
   async revokeRefreshToken(userId: number) {
     await this.usersRepository.update(userId, { refreshToken: '' });
   }
+
+  async findOneByUsername(username: string): Promise<Users> {
+    return this.usersRepository.findOneBy({ username });
+  }
 }
