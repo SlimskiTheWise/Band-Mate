@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { FollowersModule } from './followers/followers.module';
 import { AwsModule } from './aws/aws.module';
 import { InstrumentModule } from './instuments/instruments.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { InstrumentModule } from './instuments/instruments.module';
     FollowersModule,
     AwsModule,
     InstrumentModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
