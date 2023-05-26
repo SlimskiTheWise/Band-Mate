@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { VerificationCodesRepository } from './../mail/verification-codes.repository';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { SignupDto } from './dtos/signup.dto';
 import { Users } from './users.entity';
 import { UsersRepository } from './users.repository';
@@ -10,10 +15,25 @@ export class UsersService {
   constructor(
     private readonly usersRepository: UsersRepository,
     private readonly utilsService: UtilsService,
+    private readonly verificationCodesRepository: VerificationCodesRepository,
   ) {}
 
   async signUp(body: SignupDto): Promise<Users> {
     const { password, ...rest } = body;
+
+    const verifCode = await this.verificationCodesRepository.findOneByEmail(
+      rest.email,
+    );
+
+    if (!verifCode || !verifCode.isVerified)
+      throw new BadRequestException('verify email');
+
+    const emailExists = await this.findOneByEmail(rest.email);
+    if (emailExists) throw new ConflictException('Email already exists');
+
+    const usernameExists = await this.findOneByUsername(rest.username);
+    if (usernameExists) throw new ConflictException('Username already exists');
+
     const hashedPassword = await this.utilsService.encrypt(password);
     return this.usersRepository.signUp({ password: hashedPassword, ...rest });
   }
@@ -24,6 +44,10 @@ export class UsersService {
 
   async findOneById(id: number): Promise<Users> {
     return this.usersRepository.findOneById(id);
+  }
+
+  async findOneByUsername(username: string): Promise<Users> {
+    return this.usersRepository.findOneByUsername(username);
   }
 
   async saveRefreshToken(userId: number, refresh_token: string) {

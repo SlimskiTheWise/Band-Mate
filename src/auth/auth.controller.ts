@@ -1,8 +1,10 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Req,
   Res,
@@ -17,11 +19,16 @@ import { GoogleAuthGuard } from './guards/google-auth-guard';
 import { GoogleUser } from './interfaces/google.user.interface';
 import { Users } from 'src/users/users.entity';
 import { RefreshAuthGuard } from './guards/refresh-auth.guard';
+import { MailService } from 'src/mail/mail.service';
+import { VerificationDto } from './dtos/verification.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private mailService: MailService,
+  ) {}
   @ApiBody({
     schema: {
       properties: {
@@ -90,5 +97,26 @@ export class AuthController {
     res.clearCookie('refresh_token');
     this.authService.signout(req.user as Users);
     res.send({ success: true });
+  }
+
+  @ApiBody({
+    schema: {
+      properties: {
+        email: { type: 'string', example: 'test@test.com' },
+      },
+    },
+  })
+  @ApiOperation({ description: 'send verification code via email' })
+  @Post('/send-verification-code:email')
+  async sendVerificationCode(@Param('email') email: string) {
+    await this.mailService.sendVerificationCode(email);
+  }
+
+  @ApiOperation({ description: 'verify email' })
+  @Post('/verify')
+  async verifyVerificationCode(
+    @Body() { email, code }: VerificationDto,
+  ): Promise<boolean> {
+    return await this.mailService.verifyVerificationCode(code, email);
   }
 }

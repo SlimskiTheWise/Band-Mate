@@ -6,6 +6,7 @@ export function seedSingleUser(index = 1): Users {
   user.id = index;
   user.name = `random-name${index}`;
   user.email = `test@test${index}.com`;
+  user.username = 'username';
   user.password = '123456';
   user.createdAt = new Date();
   user.updatedAt = new Date();

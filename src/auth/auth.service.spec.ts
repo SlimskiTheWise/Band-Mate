@@ -9,11 +9,13 @@ import { UsersRepository } from 'src/users/users.repository';
 import { seedSingleUser } from 'src/test/mock-data/user-mock-data';
 import { jwtData } from 'src/test/mock-data/jwt-mock-data';
 import { REPOSITORY_TOKEN } from 'src/test/repository-token';
+import { VerificationCodesRepository } from 'src/mail/verification-codes.repository';
 
 describe('AuthService', () => {
   let authService: AuthService;
   let utilsService: UtilsService;
   let usersService: UsersService;
+  let verificationCodesRepository: VerificationCodesRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -33,6 +35,10 @@ describe('AuthService', () => {
             save: jest.fn(),
             update: jest.fn(),
           },
+        },
+        {
+          provide: VerificationCodesRepository,
+          useValue: { findOneByEmail: jest.fn() },
         },
         {
           provide: JwtService,
@@ -64,6 +70,9 @@ describe('AuthService', () => {
     authService = module.get<AuthService>(AuthService);
     utilsService = module.get<UtilsService>(UtilsService);
     usersService = module.get<UsersService>(UsersService);
+    verificationCodesRepository = module.get<VerificationCodesRepository>(
+      VerificationCodesRepository,
+    );
   });
 
   afterEach(() => {
@@ -72,6 +81,7 @@ describe('AuthService', () => {
 
   it('should be defined', () => {
     expect(authService).toBeDefined();
+    expect(verificationCodesRepository).toBeDefined();
   });
 
   describe('validate user', () => {
