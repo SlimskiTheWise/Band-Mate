@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
   ParseIntPipe,
   Post,
@@ -52,5 +53,18 @@ export class InstrumentCommentsController {
       content,
     };
     await this.instrumentCommentsService.updateInstrumentComment(comment);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'user can delete a comment on an instrument post' })
+  @Delete(':instrumentCommentId')
+  async deleteInstrumentComment(
+    @Req() { user }: { user: Users },
+    @Param('instrumentCommentId', ParseIntPipe) instrumentCommentId: number,
+  ): Promise<void> {
+    await this.instrumentCommentsService.deleteInstrumentComment(
+      user.id,
+      instrumentCommentId,
+    );
   }
 }

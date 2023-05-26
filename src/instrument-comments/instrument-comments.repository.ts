@@ -35,4 +35,8 @@ export class InstrumentCommentsRepository {
       { content },
     );
   }
+
+  async deleteInstrumentComment(id: number) {
+    await this.instrumentCommentsRepository.softDelete(id);
+  }
 }

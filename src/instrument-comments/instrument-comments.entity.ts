@@ -1,4 +1,3 @@
-import { AbstractEntity } from 'src/entities/abstract.entity';
 import { TimestampEntity } from 'src/entities/timestamp.entity';
 import { Instruments } from 'src/instruments/instruments.entity';
 import { Users } from 'src/users/users.entity';

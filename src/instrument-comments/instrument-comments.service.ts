@@ -38,4 +38,21 @@ export class InstrumentCommentsService {
       ...comment,
     });
   }
+
+  async deleteInstrumentComment(userId: number, instrumentCommentId: number) {
+    const commentExists =
+      await this.instrumentCommentsRepository.getInstrumentCommentById(
+        instrumentCommentId,
+      );
+    if (!commentExists) {
+      throw new NotFoundException('comment not found');
+    }
+
+    if (userId !== commentExists.userId) {
+      throw new UnauthorizedException();
+    }
+    await this.instrumentCommentsRepository.deleteInstrumentComment(
+      instrumentCommentId,
+    );
+  }
 }
