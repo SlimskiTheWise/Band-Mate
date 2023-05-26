@@ -10,8 +10,6 @@ import { AwsModule } from './aws/aws.module';
 import { InstrumentModule } from './instruments/instruments.module';
 import { MailModule } from './mail/mail.module';
 import { InstrumentCommentsModule } from './instrument-comments/instrument-comments.module';
-import { InsturmentCommentsController } from './instrument-comments/insturment-comments.controller';
-import { InsturmentCommentsService } from './instrument-comments/insturment-comments.service';
 
 @Module({
   imports: [
@@ -45,7 +43,7 @@ import { InsturmentCommentsService } from './instrument-comments/insturment-comm
     MailModule,
     InstrumentCommentsModule,
   ],
-  controllers: [InsturmentCommentsController],
-  providers: [InsturmentCommentsService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
