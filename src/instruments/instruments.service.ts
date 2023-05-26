@@ -22,4 +22,8 @@ export class InstrumentsService {
   ): Promise<PageDto<Instruments>> {
     return this.instrumentsRepository.getInstruments(query);
   }
+
+  async getInstrumentById(instrumentId: number): Promise<Instruments> {
+    return this.instrumentsRepository.getInstrumentById(instrumentId);
+  }
 }

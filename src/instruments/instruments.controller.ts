@@ -6,6 +6,8 @@ import {
   UseGuards,
   Get,
   Query,
+  ParseIntPipe,
+  Param,
 } from '@nestjs/common';
 import { InstrumentsService as InstrumentsService } from './instruments.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -17,11 +19,11 @@ import { PageDto } from 'src/utils/responses/page.dto';
 import { PaginateOptionsDto } from 'src/utils/dtos/paginate.options.dto';
 
 @Controller('instruments')
-@UseGuards(JwtAuthGuard)
 @ApiTags('Instruments')
 export class InstrumentsController {
   constructor(private instrumentsService: InstrumentsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'creating a post for selling' })
   @Post()
   async createInstrument(
@@ -37,5 +39,13 @@ export class InstrumentsController {
     @Query() query: PaginateOptionsDto,
   ): Promise<PageDto<Instruments>> {
     return this.instrumentsService.getInsturments(query);
+  }
+
+  @ApiOperation({ summary: 'instrument in detail ' })
+  @Get(':instrumentId')
+  async getInstrumentById(
+    @Param('instrumentId', ParseIntPipe) instrumentId: number,
+  ): Promise<Instruments> {
+    return this.instrumentsService.getInstrumentById(instrumentId);
   }
 }
