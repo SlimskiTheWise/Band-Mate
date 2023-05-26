@@ -1,8 +1,9 @@
 import { TimestampEntity } from 'src/entities/timestamp.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Condition } from './enums/condition.enum';
 import { Type } from './enums/type.enum';
 import { Users } from 'src/users/users.entity';
+import { InstrumentComments } from 'src/instrument-comments/instrument-comments.entity';
 
 @Entity('Instruments')
 export class Instruments extends TimestampEntity {
@@ -40,4 +41,10 @@ export class Instruments extends TimestampEntity {
   @ManyToOne(() => Users, (user) => user.instruments)
   @JoinColumn({ name: 'userId' })
   user: Users;
+
+  @OneToMany(
+    () => InstrumentComments,
+    (instrumentComment) => instrumentComment.instrument,
+  )
+  instrumentComments: InstrumentComments[];
 }
