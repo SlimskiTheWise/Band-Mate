@@ -7,8 +7,11 @@ import { UtilsModule } from './utils/utils.module';
 import { AuthModule } from './auth/auth.module';
 import { FollowersModule } from './followers/followers.module';
 import { AwsModule } from './aws/aws.module';
-import { InstrumentModule } from './instuments/instruments.module';
+import { InstrumentModule } from './instruments/instruments.module';
 import { MailModule } from './mail/mail.module';
+import { InstrumentCommentsModule } from './instrument-comments/instrument-comments.module';
+import { InsturmentCommentsController } from './instrument-comments/insturment-comments.controller';
+import { InsturmentCommentsService } from './instrument-comments/insturment-comments.service';
 
 @Module({
   imports: [
@@ -40,8 +43,9 @@ import { MailModule } from './mail/mail.module';
     AwsModule,
     InstrumentModule,
     MailModule,
+    InstrumentCommentsModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [InsturmentCommentsController],
+  providers: [InsturmentCommentsService],
 })
 export class AppModule {}

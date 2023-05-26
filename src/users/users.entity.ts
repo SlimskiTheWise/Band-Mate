@@ -1,7 +1,7 @@
 import { Role } from 'src/common/enums/role.enum';
 import { TimestampEntity } from 'src/entities/timestamp.entity';
 import { Followers } from 'src/followers/follwers.entity';
-import { Instruments } from 'src/instuments/instruments.entity';
+import { Instruments } from 'src/instruments/instruments.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('Users')

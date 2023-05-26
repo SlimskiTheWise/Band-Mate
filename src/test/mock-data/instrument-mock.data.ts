@@ -1,6 +1,6 @@
-import { Condition } from 'src/instuments/enums/condition.enum';
-import { Type } from 'src/instuments/enums/type.enum';
-import { Instruments } from 'src/instuments/instruments.entity';
+import { Condition } from 'src/instruments/enums/condition.enum';
+import { Type } from 'src/instruments/enums/type.enum';
+import { Instruments } from 'src/instruments/instruments.entity';
 
 export function seedSingleInstrument(index = 1): Instruments {
   const instrument = new Instruments();
