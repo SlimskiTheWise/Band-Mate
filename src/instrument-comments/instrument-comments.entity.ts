@@ -18,7 +18,14 @@ export class InstrumentComments extends TimestampEntity {
   @JoinColumn({ name: 'userId' })
   user: Users;
 
-  @ManyToOne(() => Instruments, (instruments) => instruments.instrumentComments)
+  @ManyToOne(
+    () => Instruments,
+    (instruments) => instruments.instrumentComments,
+    {
+      cascade: true,
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'instrumentId' })
   instrument: Instruments;
 }

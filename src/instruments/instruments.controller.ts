@@ -8,6 +8,7 @@ import {
   Query,
   ParseIntPipe,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { InstrumentsService as InstrumentsService } from './instruments.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -30,6 +31,7 @@ export class InstrumentsController {
     @Body() body: CreateInstrumentDto,
     @Req() { user }: { user: Users },
   ): Promise<Instruments> {
+    console.log(user);
     return this.instrumentsService.createInstrument(body, user);
   }
 
@@ -47,5 +49,15 @@ export class InstrumentsController {
     @Param('instrumentId', ParseIntPipe) instrumentId: number,
   ): Promise<Instruments> {
     return this.instrumentsService.getInstrumentById(instrumentId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'delete instrument' })
+  @Delete(':instrumentId')
+  async deleteInstrument(
+    @Param('instrumentId', ParseIntPipe) instrumentId: number,
+    @Req() { user }: { user: Users },
+  ): Promise<void> {
+    return this.instrumentsService.deleteInstrument(user, instrumentId);
   }
 }

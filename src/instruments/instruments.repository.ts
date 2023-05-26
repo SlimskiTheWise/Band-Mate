@@ -45,4 +45,9 @@ export class InstrumentsRepository {
       .where('instruments.id = :instrumentId', { instrumentId })
       .getOne();
   }
+
+  async deleteInstrument(instrumentId: number): Promise<void> {
+    //TODO: related comments should be deleted too
+    await this.instrumentsRepository.softDelete(instrumentId);
+  }
 }
