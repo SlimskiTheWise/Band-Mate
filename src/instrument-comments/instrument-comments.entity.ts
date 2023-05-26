@@ -1,10 +1,11 @@
 import { AbstractEntity } from 'src/entities/abstract.entity';
+import { TimestampEntity } from 'src/entities/timestamp.entity';
 import { Instruments } from 'src/instruments/instruments.entity';
 import { Users } from 'src/users/users.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('InstrumentComments')
-export class InstrumentComments extends AbstractEntity {
+export class InstrumentComments extends TimestampEntity {
   @Column({ name: 'userId', type: 'int', nullable: false })
   userId: number;
 
