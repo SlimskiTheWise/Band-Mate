@@ -8,12 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { InstrumentCommentsService } from './instrument-comments.service';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateInstrumentCommentDto } from './dtos/create-instrument-comment.dto';
 import { Users } from 'src/users/users.entity';
 import { CreateInstrumentComment } from './interfaces/create-intrument-comment.interface';
-
+@ApiTags('InstrumentComments')
 @Controller('instrument-comments')
 export class InstrumentCommentsController {
   constructor(
