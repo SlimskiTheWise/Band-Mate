@@ -35,4 +35,19 @@ export class InstrumentsRepository {
 
     return this.utilsService.queryBuilderPaginate(queryBuilder, query);
   }
+
+  async getInstrumentById(instrumentId: number): Promise<Instruments> {
+    return this.instrumentsRepository
+      .createQueryBuilder('instruments')
+      .leftJoinAndSelect('instruments.instrumentComments', 'instrumentComments')
+      .leftJoin('instrumentComments.user', 'user')
+      .addSelect(['user.id', 'user.username'])
+      .where('instruments.id = :instrumentId', { instrumentId })
+      .getOne();
+  }
+
+  async deleteInstrument(instrumentId: number): Promise<void> {
+    //TODO: related comments should be deleted too
+    await this.instrumentsRepository.softDelete(instrumentId);
+  }
 }

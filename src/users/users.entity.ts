@@ -1,7 +1,8 @@
 import { Role } from 'src/common/enums/role.enum';
 import { TimestampEntity } from 'src/entities/timestamp.entity';
 import { Followers } from 'src/followers/follwers.entity';
-import { Instruments } from 'src/instuments/instruments.entity';
+import { InstrumentComments } from 'src/instrument-comments/instrument-comments.entity';
+import { Instruments } from 'src/instruments/instruments.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('Users')
@@ -44,4 +45,10 @@ export class Users extends TimestampEntity {
 
   @OneToMany(() => Instruments, (instrument) => instrument.user)
   instruments: Instruments[];
+
+  @OneToMany(
+    () => InstrumentComments,
+    (instrumentComment) => instrumentComment.user,
+  )
+  instrumentComments: InstrumentComments[];
 }

@@ -7,8 +7,9 @@ import { UtilsModule } from './utils/utils.module';
 import { AuthModule } from './auth/auth.module';
 import { FollowersModule } from './followers/followers.module';
 import { AwsModule } from './aws/aws.module';
-import { InstrumentModule } from './instuments/instruments.module';
+import { InstrumentModule } from './instruments/instruments.module';
 import { MailModule } from './mail/mail.module';
+import { InstrumentCommentsModule } from './instrument-comments/instrument-comments.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { MailModule } from './mail/mail.module';
     AwsModule,
     InstrumentModule,
     MailModule,
+    InstrumentCommentsModule,
   ],
   controllers: [],
   providers: [],

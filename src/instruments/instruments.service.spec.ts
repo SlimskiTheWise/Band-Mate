@@ -14,6 +14,7 @@ import { CreateInstrumentDto } from './dtos/create-instument.dto';
 import { PageDto } from 'src/utils/responses/page.dto';
 import { Instruments } from './instruments.entity';
 import { PaginateOptionsDto } from 'src/utils/dtos/paginate.options.dto';
+import { Users } from 'src/users/users.entity';
 
 describe('InstrumentsService', () => {
   let instrumentsService: InstrumentsService;
@@ -42,6 +43,7 @@ describe('InstrumentsService', () => {
           useValue: {
             createInstrument: jest.fn(),
             getInstruments: jest.fn(),
+            getInstrumentById: jest.fn(),
           },
         },
       ],
@@ -110,6 +112,40 @@ describe('InstrumentsService', () => {
       expect(result).toEqual(mockPagination);
       expect(instrumentRepository.getInstruments).toBeCalledWith(query);
       expect(instrumentRepository.getInstruments).toBeCalledTimes(1);
+    });
+  });
+
+  describe('delete instrument', () => {
+    const user = seedSingleUser();
+    const instrument = seedSingleInstrument();
+    it('should throw an error if the logged in user is not the author', async () => {
+      const wrongUserId = 100;
+      const wrongUser: Users = {
+        ...user,
+        id: wrongUserId,
+        beforeInsert: undefined,
+        beforeUpdate: undefined,
+      };
+
+      jest
+        .spyOn(instrumentRepository, 'getInstrumentById')
+        .mockResolvedValue(instrument);
+
+      expect(
+        instrumentsService.deleteInstrument(wrongUser, instrument.id),
+      ).rejects.toThrowError();
+    });
+
+    it('should throw an error if the instrument is not found', async () => {
+      const wrongInstrumentId = 100;
+
+      jest
+        .spyOn(instrumentRepository, 'getInstrumentById')
+        .mockResolvedValue(undefined);
+
+      expect(
+        instrumentsService.deleteInstrument(user, wrongInstrumentId),
+      ).rejects.toThrowError();
     });
   });
 });
