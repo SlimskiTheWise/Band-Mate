@@ -6,9 +6,15 @@ import { Users } from './users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersRepository } from './users.repository';
 import { MailModule } from 'src/mail/mail.module';
+import { AwsModule } from 'src/aws/aws.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Users]), UtilsModule, MailModule],
+  imports: [
+    TypeOrmModule.forFeature([Users]),
+    UtilsModule,
+    MailModule,
+    AwsModule,
+  ],
   controllers: [UsersController],
   providers: [UsersService, UsersRepository],
   exports: [UsersService, UsersRepository],

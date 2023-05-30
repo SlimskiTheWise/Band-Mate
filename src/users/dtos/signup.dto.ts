@@ -28,4 +28,6 @@ export class SignupDto {
   @IsString()
   @IsOptional()
   role?: Role;
+
+  profilePictureUrl?: string;
 }
