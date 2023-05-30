@@ -16,16 +16,24 @@ export class SignupDto {
   @IsString()
   password: string;
 
-  @ApiProperty({ description: 'username', type: 'string' })
+  @ApiProperty({ description: 'username', type: 'string', nullable: true })
   @IsString()
   username?: string;
 
-  @ApiProperty({ description: 'name', type: 'string' })
+  @ApiProperty({ description: 'name', type: 'string', example: 'Dimitry Kim' })
   @IsString()
   name: string;
 
-  @ApiProperty({ description: 'role', type: 'string' })
+  @ApiProperty({
+    description: 'role',
+    type: 'string',
+    nullable: true,
+    example: 'user',
+  })
   @IsString()
   @IsOptional()
   role?: Role;
+
+  @ApiProperty({ type: 'string', format: 'binary', nullable: true })
+  profilePictureUrl?: string;
 }
