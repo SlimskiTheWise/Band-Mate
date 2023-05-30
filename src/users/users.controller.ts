@@ -7,7 +7,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { SignupDto as SignUpDto } from './dtos/signup.dto';
 import { Users } from './users.entity';
@@ -22,9 +22,10 @@ export class UsersController {
     private readonly awsService: AwsService,
   ) {}
 
+  @ApiConsumes('multipart/form-data')
   @ApiOperation({ description: 'sign up' })
   @Post()
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileInterceptor('profilePictureUrl'))
   async signUp(
     @Body() body: SignUpDto,
     @UploadedFile() file: Express.Multer.File,
