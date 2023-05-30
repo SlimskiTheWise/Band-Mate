@@ -1,11 +1,12 @@
 import { UtilsService } from 'src/utils/utils.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Instruments as Instruments } from './instruments.entity';
 import { CreateInstrumentDto } from './dtos/create-instument.dto';
 import { PageDto } from 'src/utils/responses/page.dto';
 import { PaginateOptionsDto } from 'src/utils/dtos/paginate.options.dto';
+import { InstrumentComments } from 'src/instrument-comments/instrument-comments.entity';
 
 @Injectable()
 export class InstrumentsRepository {
@@ -13,6 +14,7 @@ export class InstrumentsRepository {
     @InjectRepository(Instruments)
     private instrumentsRepository: Repository<Instruments>,
     private utilsService: UtilsService,
+    private dataSource: DataSource,
   ) {}
 
   async createInstrument(
@@ -47,7 +49,19 @@ export class InstrumentsRepository {
   }
 
   async deleteInstrument(instrumentId: number): Promise<void> {
-    //TODO: related comments should be deleted too
-    await this.instrumentsRepository.softDelete(instrumentId);
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.startTransaction();
+    try {
+      await queryRunner.manager.softDelete(Instruments, { id: instrumentId });
+      await queryRunner.manager.softDelete(InstrumentComments, {
+        instrumentId,
+      });
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      console.log(e);
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
