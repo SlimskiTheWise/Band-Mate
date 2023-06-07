@@ -35,6 +35,7 @@ export class AuthService {
       email: user.email,
       role: user.role,
     };
+    await this.usersService.updateLastLogin(user.id);
     const access_token = this.createAccessToken(payload);
     const refresh_token = this.createRefreshToken(payload);
     await this.usersService.saveRefreshToken(user.id, refresh_token);
@@ -71,6 +72,7 @@ export class AuthService {
 
   async googleLogin(user: GoogleUser) {
     const userExists = await this.usersService.findOneByEmail(user.email);
+    await this.usersService.updateLastLogin(userExists.id);
     const newUser = !userExists ? await this.signupGoogleUser(user) : undefined;
     return this.login(newUser || userExists);
   }
