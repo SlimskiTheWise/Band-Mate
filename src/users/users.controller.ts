@@ -7,12 +7,13 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { SignupDto as SignUpDto } from './dtos/signup.dto';
 import { Users } from './users.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws/aws.service';
+import { UsersCountsResponse } from './responses/users-counts.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -35,6 +36,12 @@ export class UsersController {
       body.profilePictureUrl = key;
     }
     return await this.usersService.signUp(body);
+  }
+
+  @ApiOperation({ summary: 'users counts' })
+  @Get('counts')
+  async getUsersCounts(): Promise<UsersCountsResponse> {
+    return await this.usersService.getUsersCounts();
   }
 
   @ApiOperation({ description: 'find one user' })
