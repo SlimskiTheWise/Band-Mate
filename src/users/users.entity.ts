@@ -35,6 +35,9 @@ export class Users extends TimestampEntity {
   @Column({ name: 'profilePictureUrl', type: 'varchar', nullable: true })
   profilePictureUrl?: string;
 
+  @Column({ name: 'lastLogin', type: 'date', nullable: true })
+  lastLogin?: Date;
+
   @ManyToOne(() => Followers, (follower) => follower.following)
   @JoinColumn({ name: 'followedUserId' })
   followers: Followers[];

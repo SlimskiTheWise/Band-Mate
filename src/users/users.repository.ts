@@ -33,4 +33,8 @@ export class UsersRepository {
   async findOneByUsername(username: string): Promise<Users> {
     return this.usersRepository.findOneBy({ username });
   }
+
+  async updateLastLogin(userId: number) {
+    return this.usersRepository.update(userId, { lastLogin: new Date() });
+  }
 }

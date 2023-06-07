@@ -62,6 +62,7 @@ describe('AuthService', () => {
             register: jest.fn(),
             saveRefreshToken: jest.fn(),
             revokeRefreshToken: jest.fn(),
+            updateLastLogin: jest.fn(),
           },
         },
       ],

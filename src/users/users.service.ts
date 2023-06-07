@@ -70,4 +70,8 @@ export class UsersService {
       password: hashedPassword,
     });
   }
+
+  async updateLastLogin(userId: number): Promise<void> {
+    await this.usersRepository.updateLastLogin(userId);
+  }
 }
