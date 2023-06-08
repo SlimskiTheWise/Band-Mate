@@ -13,7 +13,7 @@ export class AdminGuard extends JwtAuthGuard {
     super();
   }
 
-  canActivate(context: ExecutionContext) {
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies.access_token;
     const user = this.jwtService.decode(token) as { role: Role };
