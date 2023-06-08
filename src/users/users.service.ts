@@ -9,6 +9,7 @@ import { Users } from './users.entity';
 import { UsersRepository } from './users.repository';
 import { UtilsService } from 'src/utils/utils.service';
 import { GoogleUser } from 'src/auth/interfaces/google.user.interface';
+import { UsersCountsResponse } from './responses/users-counts.dto';
 
 @Injectable()
 export class UsersService {
@@ -73,5 +74,9 @@ export class UsersService {
 
   async updateLastLogin(userId: number): Promise<void> {
     await this.usersRepository.updateLastLogin(userId);
+  }
+
+  async getUsersCounts(): Promise<UsersCountsResponse> {
+    return this.usersRepository.getUsersCounts();
   }
 }

@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersRepository } from './users.repository';
 import { MailModule } from 'src/mail/mail.module';
 import { AwsModule } from 'src/aws/aws.module';
+import { AdminGuard } from 'src/auth/guards/admin-auth.guard';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -14,9 +16,10 @@ import { AwsModule } from 'src/aws/aws.module';
     UtilsModule,
     MailModule,
     AwsModule,
+    JwtModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository],
+  providers: [UsersService, UsersRepository, AdminGuard],
   exports: [UsersService, UsersRepository],
 })
 export class UsersModule {}

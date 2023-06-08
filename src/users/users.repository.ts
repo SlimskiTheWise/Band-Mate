@@ -1,8 +1,9 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Users } from './users.entity';
-import { Repository } from 'typeorm';
+import { Repository, MoreThanOrEqual } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { SignupDto } from './dtos/signup.dto';
+import { UsersCountsResponse } from './responses/users-counts.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -36,5 +37,29 @@ export class UsersRepository {
 
   async updateLastLogin(userId: number) {
     return this.usersRepository.update(userId, { lastLogin: new Date() });
+  }
+
+  async getUsersCounts(): Promise<UsersCountsResponse> {
+    const currentDate = new Date();
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(currentDate.getDate() - 30);
+
+    const totalUsers = await this.usersRepository.count();
+
+    const usersJoinedThisMonth = await this.usersRepository.count({
+      where: {
+        createdAt: MoreThanOrEqual(
+          new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+        ),
+      },
+    });
+
+    const activeUsers = await this.usersRepository.count({
+      where: {
+        lastLogin: MoreThanOrEqual(thirtyDaysAgo),
+      },
+    });
+
+    return { totalUsers, usersJoinedThisMonth, activeUsers };
   }
 }

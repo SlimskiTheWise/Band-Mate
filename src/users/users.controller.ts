@@ -5,14 +5,17 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { SignupDto as SignUpDto } from './dtos/signup.dto';
 import { Users } from './users.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws/aws.service';
+import { UsersCountsResponse } from './responses/users-counts.dto';
+import { AdminGuard } from 'src/auth/guards/admin-auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -37,6 +40,14 @@ export class UsersController {
     return await this.usersService.signUp(body);
   }
 
+  @UseGuards(AdminGuard)
+  @ApiOperation({ summary: 'users counts' })
+  @Get('counts')
+  async getUsersCounts(): Promise<UsersCountsResponse> {
+    return await this.usersService.getUsersCounts();
+  }
+
+  @UseGuards(AdminGuard)
   @ApiOperation({ description: 'find one user' })
   @Get(':email')
   async findOne(@Param('email') email: string) {
