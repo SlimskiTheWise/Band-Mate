@@ -11,7 +11,7 @@ export class VerificationCodesRepository {
   ) {}
 
   async createVerificationCode(
-    code: number,
+    code: string,
     email: string,
   ): Promise<VerificationCodes> {
     return await this.verificationCodesRepository.save({ code, email });
@@ -22,7 +22,7 @@ export class VerificationCodesRepository {
   }
 
   async verifyVerificationCode(
-    code: number,
+    code: string,
     email: string,
   ): Promise<VerificationCodes> {
     return await this.verificationCodesRepository.findOneBy({ code, email });

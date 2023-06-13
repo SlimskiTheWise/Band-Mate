@@ -11,7 +11,7 @@ export class VerificationDto {
 
   @MinLength(4)
   @ApiProperty({
-    example: 1212,
+    example: '1212',
   })
-  code: number;
+  code: string;
 }

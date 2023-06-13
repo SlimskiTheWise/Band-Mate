@@ -27,7 +27,7 @@ export class MailService {
         html: `<p>Code: ${code}</p>`,
       });
       await this.verificationCodesRepository.createVerificationCode(
-        code,
+        code.toString(),
         email,
       );
     } catch (err) {
@@ -35,7 +35,7 @@ export class MailService {
     }
   }
 
-  async verifyVerificationCode(code: number, email: string): Promise<boolean> {
+  async verifyVerificationCode(code: string, email: string): Promise<boolean> {
     const isVerified =
       await this.verificationCodesRepository.verifyVerificationCode(
         code,

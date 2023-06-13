@@ -71,7 +71,7 @@ describe('UsersService', () => {
     const verifCode: VerificationCodes = {
       id: 1,
       email: 'test@test.com',
-      code: 1232,
+      code: '1232',
       isVerified: true,
     };
 

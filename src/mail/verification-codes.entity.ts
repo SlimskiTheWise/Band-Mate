@@ -3,8 +3,8 @@ import { Column, Entity } from 'typeorm';
 
 @Entity('VerificationCodes')
 export class VerificationCodes extends AbstractEntity {
-  @Column({ name: 'code', type: 'int', nullable: false })
-  code: number;
+  @Column({ name: 'code', type: 'varchar', nullable: false })
+  code: string;
 
   @Column({ name: 'email', type: 'varchar', nullable: false })
   email: string;

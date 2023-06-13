@@ -107,8 +107,8 @@ export class AuthController {
     },
   })
   @ApiOperation({ description: 'send verification code via email' })
-  @Post('/send-verification-code:email')
-  async sendVerificationCode(@Param('email') email: string) {
+  @Post('/send-verification-code')
+  async sendVerificationCode(@Body('email') email: string) {
     await this.mailService.sendVerificationCode(email);
   }
 
