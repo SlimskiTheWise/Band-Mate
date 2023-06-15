@@ -53,4 +53,10 @@ export class UsersController {
   async findOne(@Param('email') email: string) {
     return await this.usersService.findOneByEmail(email);
   }
+
+  // @ApiOperation({ summary: 'password reset' })
+  // @Post('password-reset')
+  // async passwordReset(@Body() password: number) {
+  //   return await this.usersService.passwordReset()
+  // }
 }
