@@ -72,7 +72,6 @@ export class AuthService {
 
   async googleLogin(user: GoogleUser) {
     const userExists = await this.usersService.findOneByEmail(user.email);
-    await this.usersService.updateLastLogin(userExists.id);
     const newUser = !userExists ? await this.signupGoogleUser(user) : undefined;
     return this.login(newUser || userExists);
   }
