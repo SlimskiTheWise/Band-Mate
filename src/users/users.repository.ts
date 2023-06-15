@@ -62,4 +62,8 @@ export class UsersRepository {
 
     return { totalUsers, usersJoinedThisMonth, activeUsers };
   }
+
+  async passwordReset(id: number, hashedPassword: string): Promise<void> {
+    await this.usersRepository.update(id, { password: hashedPassword });
+  }
 }

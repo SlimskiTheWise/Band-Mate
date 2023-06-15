@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { VerificationCodes } from './verification-codes.entity';
 import { Repository } from 'typeorm';
 import { VerificationDto } from 'src/auth/dtos/verification.dto';
+import { Type } from './enums/type.enum';
 
 @Injectable()
 export class VerificationCodesRepository {
@@ -33,7 +34,7 @@ export class VerificationCodesRepository {
     await this.verificationCodesRepository.update({ id }, { isVerified: true });
   }
 
-  async findOneByEmail(email: string): Promise<VerificationCodes> {
-    return this.verificationCodesRepository.findOneBy({ email });
+  async findOne(email: string, type = Type.SIGNUP): Promise<VerificationCodes> {
+    return this.verificationCodesRepository.findOneBy({ email, type });
   }
 }

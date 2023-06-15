@@ -14,8 +14,9 @@ export class MailService {
   async sendVerificationCode({ email, type }: VerificationCreateDto) {
     try {
       // delete existing verification code data when the user requesting this agian
-      const codeExists = await this.verificationCodesRepository.findOneByEmail(
+      const codeExists = await this.verificationCodesRepository.findOne(
         email,
+        type,
       );
       if (codeExists) {
         this.verificationCodesRepository.deleteVerificationCode(codeExists.id);

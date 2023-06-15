@@ -11,6 +11,7 @@ import { Users } from './users.entity';
 import { Role } from 'src/common/enums/role.enum';
 import { seedSingleUser } from 'src/test/mock-data/user-mock-data';
 import { VerificationCodes } from 'src/mail/verification-codes.entity';
+import { Type } from 'src/mail/enums/type.enum';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -28,7 +29,7 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: VerificationCodesRepository,
-          useValue: { findOneByEmail: jest.fn() },
+          useValue: { findOne: jest.fn() },
         },
         {
           provide: UsersRepository,
@@ -72,13 +73,14 @@ describe('UsersService', () => {
       id: 1,
       email: 'test@test.com',
       code: '1232',
+      type: Type.SIGNUP,
       isVerified: true,
     };
 
     const newUser: Users = seedSingleUser();
 
     jest
-      .spyOn(verificationCodesRepository, 'findOneByEmail')
+      .spyOn(verificationCodesRepository, 'findOne')
       .mockResolvedValue(verifCode);
     jest.spyOn(usersRepository, 'findOneByEmail').mockReturnValue(undefined);
     jest.spyOn(usersRepository, 'findOneByUsername').mockReturnValue(undefined);
