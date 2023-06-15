@@ -10,6 +10,7 @@ import { UsersRepository } from './users.repository';
 import { UtilsService } from 'src/utils/utils.service';
 import { GoogleUser } from 'src/auth/interfaces/google.user.interface';
 import { UsersCountsResponse } from './responses/users-counts.dto';
+import { Type } from 'src/mail/enums/type.enum';
 
 @Injectable()
 export class UsersService {
@@ -22,17 +23,19 @@ export class UsersService {
   async signUp(body: SignupDto): Promise<Users> {
     const { password, ...rest } = body;
 
-    const verifCode = await this.verificationCodesRepository.findOneByEmail(
+    const verifCode = await this.verificationCodesRepository.findOne(
       rest.email,
     );
 
     if (!verifCode || !verifCode.isVerified)
       throw new BadRequestException('verify email');
 
-    const emailExists = await this.findOneByEmail(rest.email);
+    const emailExists = await this.usersRepository.findOneByEmail(rest.email);
     if (emailExists) throw new ConflictException('Email already exists');
 
-    const usernameExists = await this.findOneByUsername(rest.username);
+    const usernameExists = await this.usersRepository.findOneByUsername(
+      rest.username,
+    );
     if (usernameExists) throw new ConflictException('Username already exists');
 
     const hashedPassword = await this.utilsService.encrypt(password);
@@ -78,5 +81,21 @@ export class UsersService {
 
   async getUsersCounts(): Promise<UsersCountsResponse> {
     return this.usersRepository.getUsersCounts();
+  }
+
+  async passwordReset(password: string, email: string): Promise<void> {
+    const user = await this.usersRepository.findOneByEmail(email);
+
+    const verifCode = await this.verificationCodesRepository.findOne(
+      email,
+      Type.PASSWORD_RESET,
+    );
+
+    if (!verifCode || !verifCode.isVerified) {
+      throw new BadRequestException('verify email');
+    }
+
+    const hashedPassword = await this.utilsService.encrypt(password);
+    await this.usersRepository.passwordReset(user.id, hashedPassword);
   }
 }

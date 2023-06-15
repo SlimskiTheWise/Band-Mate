@@ -4,7 +4,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
   Req,
   Res,
@@ -21,6 +20,7 @@ import { Users } from 'src/users/users.entity';
 import { RefreshAuthGuard } from './guards/refresh-auth.guard';
 import { MailService } from 'src/mail/mail.service';
 import { VerificationDto } from './dtos/verification.dto';
+import { VerificationCreateDto } from './dtos/verification.create.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -103,20 +103,21 @@ export class AuthController {
     schema: {
       properties: {
         email: { type: 'string', example: 'test@test.com' },
+        type: { type: 'string', example: 'password-reset' },
       },
     },
   })
   @ApiOperation({ description: 'send verification code via email' })
   @Post('/send-verification-code')
-  async sendVerificationCode(@Body('email') email: string) {
-    await this.mailService.sendVerificationCode(email);
+  async sendVerificationCode(@Body() body: VerificationCreateDto) {
+    await this.mailService.sendVerificationCode(body);
   }
 
   @ApiOperation({ description: 'verify email' })
   @Post('/verify')
   async verifyVerificationCode(
-    @Body() { email, code }: VerificationDto,
+    @Body() body: VerificationDto,
   ): Promise<boolean> {
-    return await this.mailService.verifyVerificationCode(code, email);
+    return await this.mailService.verifyVerificationCode(body);
   }
 }

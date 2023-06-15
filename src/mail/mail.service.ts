@@ -1,6 +1,8 @@
 import { VerificationCodesRepository } from './verification-codes.repository';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import { VerificationDto } from 'src/auth/dtos/verification.dto';
+import { VerificationCreateDto } from 'src/auth/dtos/verification.create.dto';
 
 @Injectable()
 export class MailService {
@@ -9,11 +11,12 @@ export class MailService {
     private readonly verificationCodesRepository: VerificationCodesRepository,
   ) {}
 
-  async sendVerificationCode(email: string) {
+  async sendVerificationCode({ email, type }: VerificationCreateDto) {
     try {
       // delete existing verification code data when the user requesting this agian
-      const codeExists = await this.verificationCodesRepository.findOneByEmail(
+      const codeExists = await this.verificationCodesRepository.findOne(
         email,
+        type,
       );
       if (codeExists) {
         this.verificationCodesRepository.deleteVerificationCode(codeExists.id);
@@ -26,21 +29,19 @@ export class MailService {
         subject: 'Verification Code',
         html: `<p>Code: ${code}</p>`,
       });
-      await this.verificationCodesRepository.createVerificationCode(
-        code.toString(),
+      await this.verificationCodesRepository.createVerificationCode({
+        code: code.toString(),
         email,
-      );
+        type,
+      });
     } catch (err) {
       console.log(err);
     }
   }
 
-  async verifyVerificationCode(code: string, email: string): Promise<boolean> {
+  async verifyVerificationCode(body: VerificationDto): Promise<boolean> {
     const isVerified =
-      await this.verificationCodesRepository.verifyVerificationCode(
-        code,
-        email,
-      );
+      await this.verificationCodesRepository.verifyVerificationCode(body);
 
     if (!isVerified) throw new BadRequestException('wrong verification code');
 

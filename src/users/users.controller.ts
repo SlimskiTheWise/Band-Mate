@@ -8,7 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiConsumes } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { SignupDto as SignUpDto } from './dtos/signup.dto';
 import { Users } from './users.entity';
@@ -52,5 +52,19 @@ export class UsersController {
   @Get(':email')
   async findOne(@Param('email') email: string) {
     return await this.usersService.findOneByEmail(email);
+  }
+
+  @ApiBody({
+    schema: {
+      properties: {
+        password: { type: 'string', example: '000000' },
+        email: { type: 'string', example: 'seunghoon@ziptoss.com' },
+      },
+    },
+  })
+  @ApiOperation({ summary: 'password reset' })
+  @Post('password-reset')
+  async passwordReset(@Body() { password, email }): Promise<void> {
+    await this.usersService.passwordReset(password, email);
   }
 }

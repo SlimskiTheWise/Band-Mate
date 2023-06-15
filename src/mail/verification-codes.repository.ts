@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { VerificationCodes } from './verification-codes.entity';
 import { Repository } from 'typeorm';
+import { VerificationDto } from 'src/auth/dtos/verification.dto';
+import { Type } from './enums/type.enum';
 
 @Injectable()
 export class VerificationCodesRepository {
@@ -10,11 +12,12 @@ export class VerificationCodesRepository {
     private verificationCodesRepository: Repository<VerificationCodes>,
   ) {}
 
-  async createVerificationCode(
-    code: string,
-    email: string,
-  ): Promise<VerificationCodes> {
-    return await this.verificationCodesRepository.save({ code, email });
+  async createVerificationCode({
+    code,
+    email,
+    type,
+  }: VerificationDto): Promise<VerificationCodes> {
+    return await this.verificationCodesRepository.save({ code, email, type });
   }
 
   async deleteVerificationCode(id: number): Promise<void> {
@@ -22,17 +25,16 @@ export class VerificationCodesRepository {
   }
 
   async verifyVerificationCode(
-    code: string,
-    email: string,
+    body: VerificationDto,
   ): Promise<VerificationCodes> {
-    return await this.verificationCodesRepository.findOneBy({ code, email });
+    return await this.verificationCodesRepository.findOneBy(body);
   }
 
   async updateVerificationCode(id: number): Promise<void> {
     await this.verificationCodesRepository.update({ id }, { isVerified: true });
   }
 
-  async findOneByEmail(email: string): Promise<VerificationCodes> {
-    return this.verificationCodesRepository.findOneBy({ email });
+  async findOne(email: string, type = Type.SIGNUP): Promise<VerificationCodes> {
+    return this.verificationCodesRepository.findOneBy({ email, type });
   }
 }
