@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import {
   Body,
   Controller,
@@ -28,6 +29,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private mailService: MailService,
+    private configService: ConfigService,
   ) {}
   @ApiBody({
     schema: {
@@ -71,20 +73,26 @@ export class AuthController {
     return req.user;
   }
 
+  @ApiOperation({ summary: 'google login' })
+  @UseGuards(GoogleAuthGuard)
+  @Get('google/login')
+  async googleLogin(): Promise<void> {
+    //calls back google/redirect
+  }
+
   @ApiOperation({ summary: 'google redirect' })
   @UseGuards(GoogleAuthGuard)
   @Get('google/redirect')
   @HttpCode(HttpStatus.OK)
   async googleRedirect(
-    @Req() req: Request,
+    @Req() { user }: { user: GoogleUser },
     @Res({ passthrough: true }) res: Response,
   ) {
     const { access_token, refresh_token } = await this.authService.googleLogin(
-      req.user as GoogleUser,
+      user,
     );
     this.authService.storeTokenInCookie(res, { access_token, refresh_token });
-    res.send({ success: true });
-    return;
+    res.redirect(this.configService.get<string>('domain'));
   }
 
   @HttpCode(204)
