@@ -16,6 +16,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws/aws.service';
 import { UsersCountsResponse } from './responses/users-counts.dto';
 import { AdminGuard } from 'src/auth/guards/admin-auth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @ApiTags('Users')
 @Controller('users')
@@ -28,6 +29,7 @@ export class UsersController {
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ description: 'sign up' })
   @Post()
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('profilePictureUrl'))
   async signUp(
     @Body() body: SignUpDto,
@@ -40,14 +42,14 @@ export class UsersController {
     return await this.usersService.signUp(body);
   }
 
-  @UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ summary: 'users counts' })
   @Get('counts')
   async getUsersCounts(): Promise<UsersCountsResponse> {
     return await this.usersService.getUsersCounts();
   }
 
-  @UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ description: 'find one user' })
   @Get(':email')
   async findOne(@Param('email') email: string) {

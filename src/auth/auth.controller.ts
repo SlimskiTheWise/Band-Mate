@@ -47,8 +47,7 @@ export class AuthController {
       req.user as Users,
     );
     this.authService.storeTokenInCookie(res, { access_token, refresh_token });
-    res.send({ success: true });
-    return;
+    return { success: true };
   }
 
   @UseGuards(RefreshAuthGuard)
@@ -62,13 +61,11 @@ export class AuthController {
       refresh_token,
     );
     this.authService.storeTokenInCookie(res, { access_token, refresh_token });
-    res.send({ success: true });
-    return;
+    return { success: true };
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  @ApiCookieAuth()
   getProfile(@Req() req: Request) {
     return req.user;
   }

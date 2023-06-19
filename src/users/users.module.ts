@@ -9,6 +9,7 @@ import { MailModule } from 'src/mail/mail.module';
 import { AwsModule } from 'src/aws/aws.module';
 import { AdminGuard } from 'src/auth/guards/admin-auth.guard';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, UsersRepository, AdminGuard],
+  providers: [UsersService, UsersRepository, AdminGuard, JwtAuthGuard],
   exports: [UsersService, UsersRepository],
 })
 export class UsersModule {}

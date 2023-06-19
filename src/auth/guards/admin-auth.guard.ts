@@ -4,14 +4,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { Role } from 'src/common/enums/role.enum';
 
 @Injectable()
-export class AdminGuard extends JwtAuthGuard {
-  constructor(private readonly jwtService: JwtService) {
-    super();
-  }
+export class AdminGuard {
+  constructor(private readonly jwtService: JwtService) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> {
     const request = context.switchToHttp().getRequest();
