@@ -58,7 +58,6 @@ export class InstrumentsRepository {
       });
       await queryRunner.commitTransaction();
     } catch (e) {
-      console.log(e);
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();

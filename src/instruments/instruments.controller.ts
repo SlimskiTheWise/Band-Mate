@@ -31,7 +31,6 @@ export class InstrumentsController {
     @Body() body: CreateInstrumentDto,
     @Req() { user }: { user: Users },
   ): Promise<Instruments> {
-    console.log(user);
     return this.instrumentsService.createInstrument(body, user);
   }
 
