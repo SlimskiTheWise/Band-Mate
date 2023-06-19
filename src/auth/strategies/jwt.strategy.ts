@@ -4,10 +4,11 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 import { Payload } from '../interfaces/payload.interface';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private config: ConfigService) {
+  constructor(private config: ConfigService, private jwtService: JwtService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         JwtStrategy.extractJwt,
@@ -18,7 +19,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: Payload): Promise<Payload> {
+  async validate(payload): Promise<Payload> {
+    const currentTimestamp = new Date().getTime() / 1000;
+    const tokenIsNotExpired = payload.exp > currentTimestamp;
+    if (!tokenIsNotExpired)
+      throw new UnauthorizedException('Access token has expired');
     return {
       id: payload.id,
       name: payload.name,
