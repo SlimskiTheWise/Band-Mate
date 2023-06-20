@@ -10,6 +10,7 @@ import { AwsModule } from './aws/aws.module';
 import { InstrumentModule } from './instruments/instruments.module';
 import { MailModule } from './mail/mail.module';
 import { InstrumentCommentsModule } from './instrument-comments/instrument-comments.module';
+import { UserInterestsModule } from './user-interests/user-interests.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { InstrumentCommentsModule } from './instrument-comments/instrument-comme
     InstrumentModule,
     MailModule,
     InstrumentCommentsModule,
+    UserInterestsModule,
   ],
   controllers: [],
   providers: [],
