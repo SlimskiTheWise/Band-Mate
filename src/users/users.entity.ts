@@ -38,6 +38,9 @@ export class Users extends TimestampEntity {
   @Column({ name: 'lastLogin', type: 'date', nullable: true })
   lastLogin?: Date;
 
+  @Column({ name: 'bio', type: 'varchar', nullable: true })
+  bio: string;
+
   @ManyToOne(() => Followers, (follower) => follower.following)
   @JoinColumn({ name: 'followedUserId' })
   followers: Followers[];
