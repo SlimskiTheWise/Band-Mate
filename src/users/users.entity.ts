@@ -3,6 +3,7 @@ import { TimestampEntity } from 'src/entities/timestamp.entity';
 import { Followers } from 'src/followers/follwers.entity';
 import { InstrumentComments } from 'src/instrument-comments/instrument-comments.entity';
 import { Instruments } from 'src/instruments/instruments.entity';
+import { UserInterests } from 'src/user-interests/user-interests.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('Users')
@@ -57,4 +58,7 @@ export class Users extends TimestampEntity {
     (instrumentComment) => instrumentComment.user,
   )
   instrumentComments: InstrumentComments[];
+
+  @OneToMany(() => UserInterests, (userInterest) => userInterest.user)
+  userInterests: UserInterests[];
 }
