@@ -44,6 +44,10 @@ export class UsersService {
     return this.usersRepository.signUp({ password: hashedPassword, ...rest });
   }
 
+  async updateProfilePicture(userId: number, key: string): Promise<void> {
+    return this.usersRepository.updateProfilePicture(userId, key);
+  }
+
   async findOneByEmail(email: string): Promise<Users> {
     return this.usersRepository.findOneByEmail(email);
   }

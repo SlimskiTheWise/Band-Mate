@@ -98,4 +98,8 @@ export class UsersRepository {
 
     return { ...user, follwersAndFollowing, userInterests };
   }
+
+  async updateProfilePicture(userId: number, key: string) {
+    this.usersRepository.update(userId, { profilePictureUrl: key });
+  }
 }

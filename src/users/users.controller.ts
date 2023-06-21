@@ -4,13 +4,14 @@ import {
   Get,
   Param,
   Post,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { SignupDto as SignUpDto } from './dtos/signup.dto';
+import { ProfilePicture, SignupDto as SignUpDto } from './dtos/signup.dto';
 import { Users } from './users.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws/aws.service';
@@ -30,7 +31,6 @@ export class UsersController {
   @ApiConsumes('multipart/form-data')
   @ApiOperation({ description: 'sign up' })
   @Post()
-  @UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('profilePictureUrl'))
   async signUp(
     @Body() body: SignUpDto,
@@ -41,6 +41,31 @@ export class UsersController {
       body.profilePictureUrl = key;
     }
     return this.usersService.signUp(body);
+  }
+
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        profilePictureUrl: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ description: 'update profile picture' })
+  @Post('/profile-picture')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('profilePictureUrl'))
+  async updateProfilePicture(
+    @Req() { user }: { user: Users },
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<void> {
+    const { key } = await this.awsService.uploadFileToS3('test', file);
+
+    await this.usersService.updateProfilePicture(user.id, key);
   }
 
   @ApiOperation({ summary: 'user profile detail' })
