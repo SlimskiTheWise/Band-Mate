@@ -17,6 +17,7 @@ import { AwsService } from 'src/aws/aws.service';
 import { UsersCountsResponse } from './responses/users-counts.dto';
 import { AdminGuard } from 'src/auth/guards/admin-auth.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { UsersProfileResponse } from './responses/user-profile.response';
 
 @ApiTags('Users')
 @Controller('users')
@@ -39,21 +40,29 @@ export class UsersController {
       const { key } = await this.awsService.uploadFileToS3('test', file);
       body.profilePictureUrl = key;
     }
-    return await this.usersService.signUp(body);
+    return this.usersService.signUp(body);
+  }
+
+  @ApiOperation({ summary: 'user profile detail' })
+  @Get(':userId')
+  async getUserProfileById(
+    @Param('userId') userId: number,
+  ): Promise<UsersProfileResponse> {
+    return this.usersService.getUserProfileById(userId);
   }
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ summary: 'users counts' })
   @Get('counts')
   async getUsersCounts(): Promise<UsersCountsResponse> {
-    return await this.usersService.getUsersCounts();
+    return this.usersService.getUsersCounts();
   }
 
   @UseGuards(JwtAuthGuard, AdminGuard)
   @ApiOperation({ description: 'find one user' })
   @Get(':email')
   async findOne(@Param('email') email: string) {
-    return await this.usersService.findOneByEmail(email);
+    return this.usersService.findOneByEmail(email);
   }
 
   @ApiBody({

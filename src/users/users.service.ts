@@ -9,8 +9,9 @@ import { Users } from './users.entity';
 import { UsersRepository } from './users.repository';
 import { UtilsService } from 'src/utils/utils.service';
 import { GoogleUser } from 'src/auth/interfaces/google.user.interface';
-import { UsersCountsResponse } from './responses/users-counts.dto';
 import { Type } from 'src/mail/enums/type.enum';
+import { UsersProfileResponse } from './responses/user-profile.response';
+import { UsersCountsResponse } from './responses/users-counts.dto';
 
 @Injectable()
 export class UsersService {
@@ -97,5 +98,9 @@ export class UsersService {
 
     const hashedPassword = await this.utilsService.encrypt(password);
     await this.usersRepository.passwordReset(user.id, hashedPassword);
+  }
+
+  async getUserProfileById(userId: number): Promise<UsersProfileResponse> {
+    return this.usersRepository.getUserProfileById(userId);
   }
 }

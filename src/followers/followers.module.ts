@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { FollowersController } from './followers.controller';
 import { FollowersService } from './followers.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,8 +9,13 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Followers]), UsersModule, JwtModule],
+  imports: [
+    TypeOrmModule.forFeature([Followers]),
+    forwardRef(() => UsersModule),
+    JwtModule,
+  ],
   controllers: [FollowersController],
   providers: [FollowersService, JwtStrategy, FollowersRepository],
+  exports: [FollowersRepository],
 })
 export class FollowersModule {}

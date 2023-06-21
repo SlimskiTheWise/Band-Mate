@@ -20,4 +20,16 @@ export class FollowersRepository {
   async deleteFollower(id: number) {
     await this.followersRepository.delete(id);
   }
+
+  async countFollowingAndFollowersById(userId: number) {
+    const followers = await this.followersRepository.countBy({
+      followedUserId: userId,
+    });
+
+    const following = await this.followersRepository.countBy({
+      followingUserId: userId,
+    });
+
+    return { followers, following };
+  }
 }

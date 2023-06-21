@@ -3,12 +3,15 @@ import { Users } from './users.entity';
 import { Repository, MoreThanOrEqual } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { SignupDto } from './dtos/signup.dto';
+import { FollowersRepository } from 'src/followers/followers.repository';
 import { UsersCountsResponse } from './responses/users-counts.dto';
+import { UsersProfileResponse } from './responses/user-profile.response';
 
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectRepository(Users) private usersRepository: Repository<Users>,
+    private followersRepository: FollowersRepository,
   ) {}
 
   async signUp(body: SignupDto) {
@@ -65,5 +68,34 @@ export class UsersRepository {
 
   async passwordReset(id: number, hashedPassword: string): Promise<void> {
     await this.usersRepository.update(id, { password: hashedPassword });
+  }
+
+  async getUserProfileById(userId: number): Promise<UsersProfileResponse> {
+    const user = await this.usersRepository
+      .createQueryBuilder('users')
+      .leftJoinAndSelect('users.instruments', 'instruments')
+      .leftJoinAndSelect('users.userInterests', 'userInterests')
+      .where('users.id = :userId', { userId })
+      .select([
+        'users.id',
+        'users.username',
+        'users.name',
+        'users.role',
+        'users.profilePictureUrl',
+        'users.bio',
+        'userInterests.type',
+        'instruments.id',
+        'instruments.title',
+        'instruments.description',
+        'instruments.price',
+        'instruments.type',
+      ])
+      .getOne();
+    const follwersAndFollowing =
+      await this.followersRepository.countFollowingAndFollowersById(userId);
+
+    const userInterests = user.userInterests.map((interest) => interest.type);
+
+    return { ...user, follwersAndFollowing, userInterests };
   }
 }
