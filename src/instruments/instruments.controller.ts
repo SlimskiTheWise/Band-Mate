@@ -17,7 +17,7 @@ import { CreateInstrumentDto } from './dtos/create-instument.dto';
 import { Users } from 'src/users/users.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { PageDto } from 'src/utils/responses/page.dto';
-import { PaginateOptionsDto } from 'src/utils/dtos/paginate.options.dto';
+import { InstrumentsFindAllDto } from './dtos/instruments-find-all.dto';
 
 @Controller('instruments')
 @ApiTags('Instruments')
@@ -37,7 +37,7 @@ export class InstrumentsController {
   @ApiOperation({ summary: 'get all instrument posts' })
   @Get()
   async getInstruments(
-    @Query() query: PaginateOptionsDto,
+    @Query() query: InstrumentsFindAllDto,
   ): Promise<PageDto<Instruments>> {
     return this.instrumentsService.getInsturments(query);
   }

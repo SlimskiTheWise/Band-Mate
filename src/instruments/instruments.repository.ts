@@ -5,8 +5,8 @@ import { DataSource, Repository } from 'typeorm';
 import { Instruments as Instruments } from './instruments.entity';
 import { CreateInstrumentDto } from './dtos/create-instument.dto';
 import { PageDto } from 'src/utils/responses/page.dto';
-import { PaginateOptionsDto } from 'src/utils/dtos/paginate.options.dto';
 import { InstrumentComments } from 'src/instrument-comments/instrument-comments.entity';
+import { InstrumentsFindAllDto } from './dtos/instruments-find-all.dto';
 
 @Injectable()
 export class InstrumentsRepository {
@@ -28,14 +28,27 @@ export class InstrumentsRepository {
   }
 
   async getInstruments(
-    query: PaginateOptionsDto,
+    query: InstrumentsFindAllDto,
   ): Promise<PageDto<Instruments>> {
+    const { take, page, minimumPrice, maximumPrice, ...options } = query;
+
     const queryBuilder = this.instrumentsRepository
       .createQueryBuilder('instruments')
       .leftJoin('instruments.user', 'users')
-      .addSelect(['users.email']);
+      .addSelect(['users.username'])
+      .where('instruments.price >= :minimumPrice', { minimumPrice })
+      .andWhere('instruments.price <= :maximumPrice', { maximumPrice });
 
-    return this.utilsService.queryBuilderPaginate(queryBuilder, query);
+    if (Object.keys(options).length !== 0) {
+      const [[key, value]] = Object.entries(options);
+      const table = key === 'username' ? 'users' : 'instruments';
+
+      queryBuilder.andWhere(`${table}.${key} LIKE :${key}`, {
+        [key]: `%${value}%`,
+      });
+    }
+
+    return this.utilsService.queryBuilderPaginate(queryBuilder, { take, page });
   }
 
   async getInstrumentById(instrumentId: number): Promise<Instruments> {

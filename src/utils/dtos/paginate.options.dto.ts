@@ -1,7 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsOptional } from 'class-validator';
-import { FindOptionsWhere, ObjectLiteral } from 'typeorm';
 
 export class PaginateOptionsDto {
   @ApiPropertyOptional({ type: Number, default: 10 })
@@ -11,8 +9,4 @@ export class PaginateOptionsDto {
   @ApiPropertyOptional({ type: Number, default: 1 })
   @Type(() => Number)
   page = 1;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  where?: FindOptionsWhere<ObjectLiteral>;
 }

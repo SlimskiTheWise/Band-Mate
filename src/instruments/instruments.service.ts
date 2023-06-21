@@ -8,7 +8,7 @@ import { CreateInstrumentDto } from './dtos/create-instument.dto';
 import { Users } from 'src/users/users.entity';
 import { InstrumentsRepository as InstrumentsRepository } from './instruments.repository';
 import { PageDto } from '../utils/responses/page.dto';
-import { PaginateOptionsDto } from 'src/utils/dtos/paginate.options.dto';
+import { InstrumentsFindAllDto } from './dtos/instruments-find-all.dto';
 
 @Injectable()
 export class InstrumentsService {
@@ -22,7 +22,7 @@ export class InstrumentsService {
   }
 
   async getInsturments(
-    query: PaginateOptionsDto,
+    query: InstrumentsFindAllDto,
   ): Promise<PageDto<Instruments>> {
     return this.instrumentsRepository.getInstruments(query);
   }
