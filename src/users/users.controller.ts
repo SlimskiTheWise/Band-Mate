@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { UsersService } from './users.service';
-import { ProfilePicture, SignupDto as SignUpDto } from './dtos/signup.dto';
+import { SignupDto as SignUpDto } from './dtos/signup.dto';
 import { Users } from './users.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { AwsService } from 'src/aws/aws.service';
