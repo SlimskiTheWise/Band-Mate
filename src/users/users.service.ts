@@ -12,6 +12,7 @@ import { GoogleUser } from 'src/auth/interfaces/google.user.interface';
 import { Type } from 'src/mail/enums/type.enum';
 import { UsersProfileResponse } from './responses/user-profile.response';
 import { UsersCountsResponse } from './responses/users-counts.dto';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -65,11 +66,14 @@ export class UsersService {
 
   async signupGoogleUser(user: GoogleUser): Promise<Users> {
     const { email, name } = user;
+
+    const username = 'username' + uuidv4();
     // assign a random password since oauth user data does not have a password
     const hashedPassword = await this.utilsService.encrypt(
       Math.random().toString(36).slice(-8),
     );
     return this.usersRepository.signUp({
+      username,
       email,
       name,
       password: hashedPassword,

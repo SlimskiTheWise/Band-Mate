@@ -16,9 +16,9 @@ export class SignupDto {
   @IsString()
   password: string;
 
-  @ApiProperty({ description: 'username', type: 'string', nullable: true })
+  @ApiProperty({ description: 'username', type: 'string', nullable: false })
   @IsString()
-  username?: string;
+  username: string;
 
   @ApiProperty({ description: 'name', type: 'string', example: 'Dimitry Kim' })
   @IsString()

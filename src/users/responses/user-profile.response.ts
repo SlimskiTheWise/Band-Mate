@@ -22,8 +22,8 @@ export class UsersProfileResponse {
   @ApiProperty({ type: Number })
   id: number;
 
-  @ApiPropertyOptional({ type: String })
-  username?: string;
+  @ApiProperty({ type: String })
+  username: string;
 
   @ApiProperty({ type: String })
   name: string;
