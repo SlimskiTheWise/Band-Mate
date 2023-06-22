@@ -3,6 +3,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { SignupDto } from './dtos/signup.dto';
 import { Users } from './users.entity';
@@ -109,6 +110,8 @@ export class UsersService {
   }
 
   async getUserProfileById(userId: number): Promise<UsersProfileResponse> {
+    const userExists = await this.findOneById(userId);
+    if (!userExists) throw new NotFoundException();
     return this.usersRepository.getUserProfileById(userId);
   }
 }
