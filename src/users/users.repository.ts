@@ -91,12 +91,16 @@ export class UsersRepository {
         'instruments.type',
       ])
       .getOne();
-    const follwersAndFollowing =
+    const followersAndFollowing =
       await this.followersRepository.countFollowingAndFollowersById(userId);
 
     const userInterests = user.userInterests.map((interest) => interest.type);
 
-    return { ...user, follwersAndFollowing, userInterests };
+    return {
+      ...user,
+      followersAndFollowing: followersAndFollowing,
+      userInterests,
+    };
   }
 
   async updateProfilePicture(userId: number, key: string) {

@@ -10,7 +10,7 @@ class InstrumentsResponse {
   title: string;
 }
 
-class FollwersAndFollowing {
+class FollowersAndFollowing {
   @ApiProperty({ type: Number })
   followers: number;
 
@@ -64,5 +64,5 @@ export class UsersProfileResponse {
       following: 2,
     },
   })
-  follwersAndFollowing: FollwersAndFollowing;
+  followersAndFollowing: FollowersAndFollowing;
 }
