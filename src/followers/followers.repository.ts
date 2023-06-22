@@ -17,8 +17,11 @@ export class FollowersRepository {
     });
   }
 
-  async deleteFollower(id: number) {
-    await this.followersRepository.delete(id);
+  async deleteFollower(userId: number, followedUserId: number) {
+    await this.followersRepository.delete({
+      followingUserId: userId,
+      followedUserId,
+    });
   }
 
   async countFollowingAndFollowersById(userId: number) {
@@ -27,6 +30,18 @@ export class FollowersRepository {
     });
 
     const following = await this.followersRepository.countBy({
+      followingUserId: userId,
+    });
+
+    return { followers, following };
+  }
+
+  async getFollowingAndFollowersById(userId: number) {
+    const followers = await this.followersRepository.findBy({
+      followedUserId: userId,
+    });
+
+    const following = await this.followersRepository.findBy({
       followingUserId: userId,
     });
 

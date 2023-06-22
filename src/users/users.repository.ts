@@ -89,16 +89,17 @@ export class UsersRepository {
         'instruments.description',
         'instruments.price',
         'instruments.type',
+        'instruments.createdAt',
       ])
       .getOne();
     const followersAndFollowing =
-      await this.followersRepository.countFollowingAndFollowersById(userId);
+      await this.followersRepository.getFollowingAndFollowersById(userId);
 
-    const userInterests = user.userInterests.map((interest) => interest.type);
+    const userInterests = user.userInterests?.map((interest) => interest.type);
 
     return {
       ...user,
-      followersAndFollowing: followersAndFollowing,
+      followersAndFollowing,
       userInterests,
     };
   }

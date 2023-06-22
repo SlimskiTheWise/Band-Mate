@@ -15,7 +15,7 @@ export class FollowersService {
     await this.followersRepository.createFollower(userId, followedUserId);
   }
 
-  async deleteFollower(id: number) {
-    await this.followersRepository.deleteFollower(id);
+  async deleteFollower(userId: number, followedUserId: number) {
+    await this.followersRepository.deleteFollower(userId, followedUserId);
   }
 }

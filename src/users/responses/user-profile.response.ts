@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Role } from 'src/common/enums/role.enum';
+import { Followers } from 'src/followers/follwers.entity';
 import { Type } from 'src/user-interests/type.enum';
 
 class InstrumentsResponse {
@@ -11,11 +12,11 @@ class InstrumentsResponse {
 }
 
 class FollowersAndFollowing {
-  @ApiProperty({ type: Number })
-  followers: number;
+  @ApiProperty({ isArray: true })
+  followers: Followers[];
 
-  @ApiProperty({ type: Number })
-  following: number;
+  @ApiProperty({ isArray: true })
+  following: Followers[];
 }
 
 export class UsersProfileResponse {

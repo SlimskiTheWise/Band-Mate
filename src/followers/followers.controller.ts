@@ -1,6 +1,7 @@
 import {
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -19,7 +20,7 @@ export class FollowersController {
   constructor(private followersService: FollowersService) {}
 
   @ApiOperation({ summary: 'loggedin user following another user' })
-  @Post(':followedUserId')
+  @Get(':followedUserId')
   async createFollower(
     @Req() { user }: { user: Users },
     @Param('followedUserId', ParseIntPipe) followedUserId: number,
@@ -28,8 +29,11 @@ export class FollowersController {
   }
 
   @ApiOperation({ summary: 'loggedin user unfollowing another user' })
-  @Delete(':id')
-  async deleteFollower(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.followersService.deleteFollower(id);
+  @Delete(':followedUserId')
+  async deleteFollower(
+    @Req() { user }: { user: Users },
+    @Param('followedUserId', ParseIntPipe) followedUserId: number,
+  ): Promise<void> {
+    await this.followersService.deleteFollower(user.id, followedUserId);
   }
 }
