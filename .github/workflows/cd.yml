@@ -1,0 +1,87 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: ap-northeast-2
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
+  EC2_INSTANCE_IP: ${{ secrets.EC2_INSTANCE_IP }}
+  EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+  EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+  IAM_PROFILE_USERNAME: ${{ secrets.IAM_PROFILE_USERNAME }}
+
+jobs:
+  build_and_push_to_ecr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR Public
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build Docker image
+        run: |
+          docker build -t band-mate-server .
+      
+      - name: Delete previous image on ECR
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_INSTANCE_IP }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            aws ecr batch-delete-image --profile ${{ env.IAM_PROFILE_USERNAME }} --repository-name band-mate-server --image-ids imageTag=latest
+
+      - name: Push Docker image to ECR
+        run: |
+          docker tag band-mate-server ${{ env.ECR_REGISTRY }}
+          docker push ${{ env.ECR_REGISTRY }}
+
+      - name: Login to ECR in EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ env.EC2_INSTANCE_IP }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: | 
+              aws ecr get-login-password --profile ${{ env.IAM_PROFILE_USERNAME }} --region ${{ env.AWS_REGION }} | sudo docker login --username AWS --password-stdin ${{ env.ECR_REGISTRY }}
+
+      - name: Clean up existing Docker containers and images on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_INSTANCE_IP }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+              sudo docker ps -q | xargs -r docker stop
+              sudo docker ps -asq | xargs -r docker rm
+              sudo docker images -q | xargs -r docker rmi
+
+      - name: Pull and run Docker image on EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_INSTANCE_IP }}
+          username: ${{ env.EC2_USERNAME }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+              sudo docker pull ${{ env.ECR_REGISTRY }}
+              sudo docker stop band-mate-server || true
+              sudo docker rm band-mate-server || true
+              sudo docker run -d --env-file ~/root/.env.production -p 4000:4000 ${{ env.ECR_REGISTRY }}
+
+
