@@ -33,4 +33,7 @@ export class CreateInstrumentDto {
   @IsNotEmpty()
   @IsString()
   type: Type;
+
+  @ApiProperty({ type: 'string', format: 'binary', nullable: true })
+  picture?: string;
 }

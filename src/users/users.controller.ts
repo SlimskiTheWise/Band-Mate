@@ -37,7 +37,10 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Users> {
     if (file) {
-      const { key } = await this.awsService.uploadFileToS3('test', file);
+      const { key } = await this.awsService.uploadFileToS3(
+        'test/profile',
+        file,
+      );
       body.profilePictureUrl = key;
     }
     return this.usersService.signUp(body);

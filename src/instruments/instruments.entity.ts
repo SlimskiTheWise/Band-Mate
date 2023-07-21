@@ -50,6 +50,9 @@ export class Instruments extends TimestampEntity {
   })
   type: Type;
 
+  @Column({ name: 'picture', type: 'varchar', nullable: true })
+  picture?: string;
+
   @ManyToOne(() => Users, (user) => user.instruments)
   @JoinColumn({ name: 'userId' })
   user: Users;
