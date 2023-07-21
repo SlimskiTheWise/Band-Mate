@@ -9,7 +9,12 @@ import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.int
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const corsOptions: CorsOptions = {
-    origin: ['http://localhost:3000', 'https://band-mate-client.vercel.app/'],
+    origin: [
+      'http://localhost:3000',
+      'https://www.slimski.com',
+      'https://slimski.com',
+      'https://api.slimski.com',
+    ],
     credentials: true,
   };
   app.enableCors(corsOptions);
