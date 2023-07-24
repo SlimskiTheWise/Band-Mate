@@ -48,6 +48,8 @@ export class InstrumentsRepository {
       });
     }
 
+    queryBuilder.orderBy('instruments.createdAt', 'DESC');
+
     return this.utilsService.queryBuilderPaginate(queryBuilder, { take, page });
   }
 

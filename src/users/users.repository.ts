@@ -135,6 +135,8 @@ export class UsersRepository {
       });
     }
 
+    queryBuilder.orderBy('users.createdAt', 'DESC');
+
     return this.utilsService.queryBuilderPaginate(queryBuilder, { take, page });
   }
 }
