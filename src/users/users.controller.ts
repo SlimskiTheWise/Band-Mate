@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -19,6 +20,8 @@ import { UsersCountsResponse } from './responses/users-counts.dto';
 import { AdminGuard } from 'src/auth/guards/admin-auth.guard';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UsersProfileResponse } from './responses/user-profile.response';
+import { PageDto } from 'src/utils/responses/page.dto';
+import { UsersFindAllDto } from './dtos/users-find-all.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -77,6 +80,12 @@ export class UsersController {
     @Param('userId') userId: number,
   ): Promise<UsersProfileResponse> {
     return this.usersService.getUserProfileById(userId);
+  }
+
+  @ApiOperation({ summary: 'get all users' })
+  @Get()
+  async getUsers(@Query() query: UsersFindAllDto): Promise<PageDto<Users>> {
+    return this.usersService.getUsers(query);
   }
 
   @UseGuards(JwtAuthGuard, AdminGuard)

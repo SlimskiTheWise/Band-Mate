@@ -6,12 +6,16 @@ import { SignupDto } from './dtos/signup.dto';
 import { FollowersRepository } from 'src/followers/followers.repository';
 import { UsersCountsResponse } from './responses/users-counts.dto';
 import { UsersProfileResponse } from './responses/user-profile.response';
+import { UsersFindAllDto } from './dtos/users-find-all.dto';
+import { PageDto } from '../utils/responses/page.dto';
+import { UtilsService } from 'src/utils/utils.service';
 
 @Injectable()
 export class UsersRepository {
   constructor(
     @InjectRepository(Users) private usersRepository: Repository<Users>,
     private followersRepository: FollowersRepository,
+    private utilsService: UtilsService,
   ) {}
 
   async signUp(body: SignupDto) {
@@ -106,5 +110,31 @@ export class UsersRepository {
 
   async updateProfilePicture(userId: number, key: string) {
     this.usersRepository.update(userId, { profilePictureUrl: key });
+  }
+
+  async getUsers(query: UsersFindAllDto): Promise<PageDto<Users>> {
+    const { take, page, ...options } = query;
+
+    const queryBuilder = this.usersRepository
+      .createQueryBuilder('users')
+      .select([
+        'users.id',
+        'users.createdAt',
+        'users.email',
+        'users.username',
+        'users.name',
+        'users.role',
+      ])
+      .leftJoinAndSelect('users.userInterests', 'userInterests');
+
+    if (Object.keys(options).length !== 0) {
+      const [[key, value]] = Object.entries(options);
+
+      queryBuilder.andWhere(`users.${key} LIKE :${key}`, {
+        [key]: `%${value}%`,
+      });
+    }
+
+    return this.utilsService.queryBuilderPaginate(queryBuilder, { take, page });
   }
 }

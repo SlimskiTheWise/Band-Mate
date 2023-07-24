@@ -14,6 +14,8 @@ import { Type } from 'src/mail/enums/type.enum';
 import { UsersProfileResponse } from './responses/user-profile.response';
 import { UsersCountsResponse } from './responses/users-counts.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { PageDto } from '../utils/responses/page.dto';
+import { UsersFindAllDto } from './dtos/users-find-all.dto';
 
 @Injectable()
 export class UsersService {
@@ -113,5 +115,9 @@ export class UsersService {
     const userExists = await this.findOneById(userId);
     if (!userExists) throw new NotFoundException();
     return this.usersRepository.getUserProfileById(userId);
+  }
+
+  async getUsers(query: UsersFindAllDto): Promise<PageDto<Users>> {
+    return this.usersRepository.getUsers(query);
   }
 }
