@@ -97,7 +97,7 @@ describe('InstrumentsService', () => {
         meta: {
           page: 1,
           take: 10,
-          toal: 50,
+          total: 50,
         },
       };
 

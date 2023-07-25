@@ -12,13 +12,13 @@ export class PageMetaDto {
   constructor(options: PageMetaDtoParams) {
     (this.page = options.page),
       (this.take = options.take),
-      (this.toal = options.total);
+      (this.total = options.total);
   }
   readonly page: number;
 
   readonly take: number;
 
-  readonly toal: number;
+  readonly total: number;
 }
 
 interface PageMetaDtoParams {

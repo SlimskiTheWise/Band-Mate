@@ -64,7 +64,7 @@ describe('UtilService', () => {
     });
     expect(result).toBeInstanceOf(PageDto);
     expect(result.items.length).toBe(10);
-    expect(result.meta).toEqual({ page: 1, take: 10, toal: 100 });
+    expect(result.meta).toEqual({ page: 1, take: 10, total: 100 });
   });
 
   it('should paginate the items and return a PageDto using queryBuilder', async () => {
