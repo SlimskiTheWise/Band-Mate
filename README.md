@@ -23,6 +23,7 @@ Check out the frontend repository -> [Frontend Repo](https://github.com/SlimskiT
 - AWS ALB
 
 ## Infrastructure Diagram
+![infra-network drawio](https://github.com/SlimskiTheWise/Band-Mate/assets/87960584/1939834b-ba33-46b8-9d7d-28d7e564423d)
 
 
 ## Installation
