@@ -42,7 +42,7 @@ $ docker-compose up
 
 ## Main Features
 
-- Google OAuth login
+- Google OAuth2 login
 - Authentication using httponly cookie, JWT, refresh token
 - Pagination
 - Unit tests using Jest
