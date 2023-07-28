@@ -42,6 +42,15 @@ $ docker-compose up
 
 ## Main Features
 
+- Google OAuth login
+- Authentication using httponly cookie, JWT, refresh token
+- Pagination
+- Unit tests using Jest
+- CI/CD using GitHub actions, Docker, AWS EC2, RDS, ECR
+- Email verification using SMPT 
+- File uploading using AWS S3
+- Design database
+- Following feature 
 
 
 
